@@ -75,8 +75,8 @@ namespace GameDBServer
         /// </summary>
         private static void HideCloseBtn()
         {
-            Console.Title = "VLTK - Game Database Server";
-            IntPtr windowHandle = FindWindow(null, Console.Title);
+            "GameDBServer" = "VLTK - Game Database Server";
+            IntPtr windowHandle = FindWindow(null, "GameDBServer");
             IntPtr closeMenu = GetSystemMenu(windowHandle, IntPtr.Zero);
             uint SC_CLOSE = 0xF060;
             RemoveMenu(closeMenu, SC_CLOSE, 0x0);
@@ -246,7 +246,7 @@ namespace GameDBServer
             {
                 Thread.Sleep(1000);
             }
-            thread.Abort();
+            // thread.Abort();
         }
 
         /// <summary>
@@ -1278,7 +1278,7 @@ namespace GameDBServer
                 ///LineId cục bộ của máy chủ thông thường là 1 và LineID cục bộ của máy chủ Liên Server = ZoneId. Nếu đang online, để tránh mất dữ liệu, không thể bị buộc đóng
                 if (Global.IsGameServerClientOnline(1) || Global.IsGameServerClientOnline(GameDBManager.ZoneID))
                 {
-                    System.Console.WriteLine(string.Format("Can not terminate the connection to {0}!", Console.Title));
+                    System.Console.WriteLine(string.Format("Can not terminate the connection to {0}!", "GameDBServer"));
                     return false;
                 }
             }

@@ -9,29 +9,29 @@ using System.Threading;
 
 namespace Server.TCP
 {
-    /*³ôÃûÕÑÖøµÄÖ¸ÁîÂÒĞò·ÖÎö:
-     * 1. Èç¹ûA socketµÄ½ÓÊÕÊÂ¼şÔÚ´¦Àí¹ı³ÌÖĞ£¬±»ÆäËûÏß³Ì·¢ËÍÊ±´íÎó£¬¹Ø±Õsocket£¬´ËÊ±TCPInPacketÖĞµÄsocket¾ä±ú»á±»Çå¿Õ£¬µ¼ÖÂ´íÎó¡£µ«ÊÇÆäËûÏß³ÌÓÉÓÚËøµÄ×÷ÓÃ£¬ÎŞ·¨Çå¿ÕÆä
-     * ÕıÔÚ´¦ÀíµÄTCPInPacketÄÚ²¿Êı¾İ£¬ËùÒÔ²»»áµ¼ÖÂÆäÖ¸ÁîÂÒĞò£¬µ«ÊÇµ±Æä½ÓÊÕÒì³££¬ÔÙ´Î´¦Àí¹Ø±ÕÊ±£¬ÓÉÓÚÎŞ·¨ÔÚ×ÖµäÖĞÕÒµ½TCPInPacketËùÒÔ£¬ÎŞ·¨¶ÔTCPInPacket²»ÔÙ´¦Àí£¬TCPInPacket
-     * ±»ÆäËûÏß³Ì´¦ÀíÇå¿Õµô£¬´ËÊ±Âß¼­ÊÇÕıÈ·µÄ£¬Ö»ÊÇ»áÔÙ²»¼ÓÅĞ¶ÏµÄÇé¿öÏÂµ¼ÖÂ¶à´Î¼õÉÙsocket¼ÆÊı¡£
-     * 2. ·¢ËÍÊ±Èç¹û´¦Àí¹Ø±Õ²Ù×÷£¬»áµ¼ÖÂµ±¶Ô·½¹Ø±Õ£¬×Ô¼º·¢ËÍÊ§°ÜÊ±£¬¶à´ÎÖ´ĞĞ¹Ø±Õ²Ù×÷¡£µ«ÊÇ¶ÔÓÚÖ¸ÁîÁ÷ÂÒĞòÃ»ÓĞÓ°Ïì¡£
-     * 3. Èç¹ûA socketµÄ½ÓÊÕÊ±¼äÔÚ´¦Àí¹ı³ÌÖĞ£¬Ö´ĞĞ·¢ËÍ³ö´í£¬»á¹Ø±Õsocket£¬Ö´ĞĞÇå¿ÕÄÚ´æµÄ²Ù×÷£¬´ËÊ±TCPInPacketÖĞµÄsocket¾ä±ú»á±»Çå¿Õ£¬µ¼ÖÂ´íÎó¡£²¢ÇÒÃ»ÓĞÖÕÖ¹²Ù×÷£¬¼ÌĞøµİ¹éÑ­»·´¦Àí¡£
-     * Í¬Ê±ÓÉÓÚ×Ô¼º½«TCPInPacket¹é»¹¸øÁË¶ÓÁĞÖĞ£¬ÆäËû½ÓÊÕ¾Í»áÓĞ»ú»áÈ¡³öÊ¹ÓÃ£¬µ±ÆäËûsocket ½ÓÊÕÈ¡³öÊ¹ÓÃÊ±£¬»áÖØĞÂ¶ÔÓÚsocket¸³Öµ£¬µ¼ÖÂA socketµÄ½ÓÊÕÖĞµÄ·¢ËÍ´¦ÀíÂß¼­³ö´í£¬·¢ËÍ¸øÁË
-     * ´íÎóµÄ¿Í»§¶Ë¶ÔÏó¡£Í¬Ê±£¬ÓÉÓÚ´ËÊ±×Ô¼ºµÄµİ¹éÑ­»·ÍË³öÊ±¿ÉÄÜ»áÒÅÁô°ë½ØÖ¸ÁîÊı¾İ¡£ÆäËûÊ¹ÓÃÕâ¸öTCPInPacketµÄsocket½ÓÊÕµ½µÄÊı¾İ£¬½øÈ¥Æä¼ÌĞø½øĞĞ´¦ÀíÔò»áµ¼ÖÂÂÒĞòµÄÖ¸ÁîÁ÷³öÏÖ¡£
-     * ¾ÍÊÇA µÄÒÅÁô°ë½ØÖ¸Áî£¬¼ÓÉÏÆäËûÀıÈçBµÄĞÂµÄÖ¸ÁîÊı¾İ£¬µ¼ÖÂBºóĞø½ÓÊÕÈ«²¿³ö´í¡£ºÇºÇ¡£ÖÕÓÚ¸ã¶®ÁË£¬YES¡£
-     * ½â¾ö·½°¸:
-     * a. ·¢ËÍÊ±²»½øĞĞ¹Ø±Õ´¦Àí£¬½»¸ø½ÓÊÕÈ¥×ö¡£
-     * b. ½ÓÊÕÊ±£¬Èç¹û³öÏÖ´íÎó£¬ÖÕÖ¹µİ¹éÑ­»·£¬ÍË³ö¡£
-     * c. ½ÓÊÕ²¿·Ö£¬·¢ËÍÊı¾İ´¦Àí³ö´í£¬ÔòÁ¢¿ÌÖ´ĞĞ¹Ø±ÕSocket²Ù×÷¡£
-     * d. ¾ÍÊÇÔ­ÔòÉÏ£¬¹Ø±Õ²Ù×÷½»¸ø½ÓÊÕÈ¥´¦Àí¡£
+    /*è‡­åæ˜­è‘—çš„æŒ‡ä»¤ä¹±åºåˆ†æ:
+     * 1. å¦‚æœA socketçš„æ¥æ”¶äº‹ä»¶åœ¨å¤„ç†è¿‡ç¨‹ä¸­ï¼Œè¢«å…¶ä»–çº¿ç¨‹å‘é€æ—¶é”™è¯¯ï¼Œå…³é—­socketï¼Œæ­¤æ—¶TCPInPacketä¸­çš„socketå¥æŸ„ä¼šè¢«æ¸…ç©ºï¼Œå¯¼è‡´é”™è¯¯ã€‚ä½†æ˜¯å…¶ä»–çº¿ç¨‹ç”±äºé”çš„ä½œç”¨ï¼Œæ— æ³•æ¸…ç©ºå…¶
+     * æ­£åœ¨å¤„ç†çš„TCPInPacketå†…éƒ¨æ•°æ®ï¼Œæ‰€ä»¥ä¸ä¼šå¯¼è‡´å…¶æŒ‡ä»¤ä¹±åºï¼Œä½†æ˜¯å½“å…¶æ¥æ”¶å¼‚å¸¸ï¼Œå†æ¬¡å¤„ç†å…³é—­æ—¶ï¼Œç”±äºæ— æ³•åœ¨å­—å…¸ä¸­æ‰¾åˆ°TCPInPacketæ‰€ä»¥ï¼Œæ— æ³•å¯¹TCPInPacketä¸å†å¤„ç†ï¼ŒTCPInPacket
+     * è¢«å…¶ä»–çº¿ç¨‹å¤„ç†æ¸…ç©ºæ‰ï¼Œæ­¤æ—¶é€»è¾‘æ˜¯æ­£ç¡®çš„ï¼Œåªæ˜¯ä¼šå†ä¸åŠ åˆ¤æ–­çš„æƒ…å†µä¸‹å¯¼è‡´å¤šæ¬¡å‡å°‘socketè®¡æ•°ã€‚
+     * 2. å‘é€æ—¶å¦‚æœå¤„ç†å…³é—­æ“ä½œï¼Œä¼šå¯¼è‡´å½“å¯¹æ–¹å…³é—­ï¼Œè‡ªå·±å‘é€å¤±è´¥æ—¶ï¼Œå¤šæ¬¡æ‰§è¡Œå…³é—­æ“ä½œã€‚ä½†æ˜¯å¯¹äºæŒ‡ä»¤æµä¹±åºæ²¡æœ‰å½±å“ã€‚
+     * 3. å¦‚æœA socketçš„æ¥æ”¶æ—¶é—´åœ¨å¤„ç†è¿‡ç¨‹ä¸­ï¼Œæ‰§è¡Œå‘é€å‡ºé”™ï¼Œä¼šå…³é—­socketï¼Œæ‰§è¡Œæ¸…ç©ºå†…å­˜çš„æ“ä½œï¼Œæ­¤æ—¶TCPInPacketä¸­çš„socketå¥æŸ„ä¼šè¢«æ¸…ç©ºï¼Œå¯¼è‡´é”™è¯¯ã€‚å¹¶ä¸”æ²¡æœ‰ç»ˆæ­¢æ“ä½œï¼Œç»§ç»­é€’å½’å¾ªç¯å¤„ç†ã€‚
+     * åŒæ—¶ç”±äºè‡ªå·±å°†TCPInPacketå½’è¿˜ç»™äº†é˜Ÿåˆ—ä¸­ï¼Œå…¶ä»–æ¥æ”¶å°±ä¼šæœ‰æœºä¼šå–å‡ºä½¿ç”¨ï¼Œå½“å…¶ä»–socket æ¥æ”¶å–å‡ºä½¿ç”¨æ—¶ï¼Œä¼šé‡æ–°å¯¹äºsocketèµ‹å€¼ï¼Œå¯¼è‡´A socketçš„æ¥æ”¶ä¸­çš„å‘é€å¤„ç†é€»è¾‘å‡ºé”™ï¼Œå‘é€ç»™äº†
+     * é”™è¯¯çš„å®¢æˆ·ç«¯å¯¹è±¡ã€‚åŒæ—¶ï¼Œç”±äºæ­¤æ—¶è‡ªå·±çš„é€’å½’å¾ªç¯é€€å‡ºæ—¶å¯èƒ½ä¼šé—ç•™åŠæˆªæŒ‡ä»¤æ•°æ®ã€‚å…¶ä»–ä½¿ç”¨è¿™ä¸ªTCPInPacketçš„socketæ¥æ”¶åˆ°çš„æ•°æ®ï¼Œè¿›å»å…¶ç»§ç»­è¿›è¡Œå¤„ç†åˆ™ä¼šå¯¼è‡´ä¹±åºçš„æŒ‡ä»¤æµå‡ºç°ã€‚
+     * å°±æ˜¯A çš„é—ç•™åŠæˆªæŒ‡ä»¤ï¼ŒåŠ ä¸Šå…¶ä»–ä¾‹å¦‚Bçš„æ–°çš„æŒ‡ä»¤æ•°æ®ï¼Œå¯¼è‡´Båç»­æ¥æ”¶å…¨éƒ¨å‡ºé”™ã€‚å‘µå‘µã€‚ç»ˆäºææ‡‚äº†ï¼ŒYESã€‚
+     * è§£å†³æ–¹æ¡ˆ:
+     * a. å‘é€æ—¶ä¸è¿›è¡Œå…³é—­å¤„ç†ï¼Œäº¤ç»™æ¥æ”¶å»åšã€‚
+     * b. æ¥æ”¶æ—¶ï¼Œå¦‚æœå‡ºç°é”™è¯¯ï¼Œç»ˆæ­¢é€’å½’å¾ªç¯ï¼Œé€€å‡ºã€‚
+     * c. æ¥æ”¶éƒ¨åˆ†ï¼Œå‘é€æ•°æ®å¤„ç†å‡ºé”™ï¼Œåˆ™ç«‹åˆ»æ‰§è¡Œå…³é—­Socketæ“ä½œã€‚
+     * d. å°±æ˜¯åŸåˆ™ä¸Šï¼Œå…³é—­æ“ä½œäº¤ç»™æ¥æ”¶å»å¤„ç†ã€‚
      */
 
     /// <summary>
-    /// ·şÎñÆ÷ÕìÌıÀà
+    /// æœåŠ¡å™¨ä¾¦å¬ç±»
     /// </summary>
     public sealed class SocketListener
     {
         /// <summary>
-        /// »º³åÇøµÄ´óĞ¡
+        /// ç¼“å†²åŒºçš„å¤§å°
         /// </summary>
         private Int32 ReceiveBufferSize;
 
@@ -51,12 +51,12 @@ namespace Server.TCP
         private Int32 numConnectedSockets;
 
         /// <summary>
-        /// ÒÑ¾­Á¬½ÓµÄSocket´Êµä¶ÔÏó
+        /// å·²ç»è¿æ¥çš„Socketè¯å…¸å¯¹è±¡
         /// </summary>
         private Dictionary<Socket, bool> ConnectedSocketsDict;
 
         /// <summary>
-        /// Íâ²¿»ñÈ¡×ÜµÄÁ¬½Ó¸öÊı
+        /// å¤–éƒ¨è·å–æ€»çš„è¿æ¥ä¸ªæ•°
         /// </summary>
         public Int32 ConnectedSocketsCount
         {
@@ -81,12 +81,12 @@ namespace Server.TCP
         /// <summary>
         /// Pool of reusable SocketAsyncEventArgs objects for read socket operations.
         /// </summary>
-        private SocketAsyncEventArgsPool readPool; //Ïß³Ì°²È«
+        private SocketAsyncEventArgsPool readPool; //çº¿ç¨‹å®‰å…¨
 
         /// <summary>
         /// Pool of reusable SocketAsyncEventArgs objects for write socket operations.
         /// </summary>
-        private SocketAsyncEventArgsPool writePool; //Ïß³Ì°²È«
+        private SocketAsyncEventArgsPool writePool; //çº¿ç¨‹å®‰å…¨
 
         /// <summary>
         /// Controls the total number of clients connected to the server.
@@ -99,7 +99,7 @@ namespace Server.TCP
         private Int32 totalBytesRead;
 
         /// <summary>
-        /// »ñÈ¡×ÜµÄ½ÓÊÕµÄ×Ö½ÚÊı
+        /// è·å–æ€»çš„æ¥æ”¶çš„å­—èŠ‚æ•°
         /// </summary>
         public Int32 TotalBytesReadSize
         {
@@ -117,7 +117,7 @@ namespace Server.TCP
         private Int32 totalBytesWrite;
 
         /// <summary>
-        /// »ñÈ¡×ÜµÄ·¢ËÍµÄ×Ö½ÚÊı
+        /// è·å–æ€»çš„å‘é€çš„å­—èŠ‚æ•°
         /// </summary>
         public Int32 TotalBytesWriteSize
         {
@@ -129,16 +129,16 @@ namespace Server.TCP
             }
         }
 
-        /// Á¬½Ó³É¹¦Í¨Öªº¯Êı
+        /// è¿æ¥æˆåŠŸé€šçŸ¥å‡½æ•°
         public event SocketConnectedEventHandler SocketConnected = null;
 
-        /// ¶Ï¿ª³É¹¦Í¨Öªº¯Êı
+        /// æ–­å¼€æˆåŠŸé€šçŸ¥å‡½æ•°
         public event SocketClosedEventHandler SocketClosed = null;
 
-        /// ½ÓÊÕÊı¾İÍ¨Öªº¯Êı
+        /// æ¥æ”¶æ•°æ®é€šçŸ¥å‡½æ•°
         public event SocketReceivedEventHandler SocketReceived = null;
 
-        /// ·¢ËÍÊı¾İÍ¨Öªº¯Êı
+        /// å‘é€æ•°æ®é€šçŸ¥å‡½æ•°
         public event SocketSendedEventHandler SocketSended = null;
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Server.TCP
             this.bufferManager = new BufferManager(receiveBufferSize * numConnections * opsToPreAlloc,
                 receiveBufferSize);
 
-            // ÒÑ¾­Á¬½ÓµÄSocket´Êµä¶ÔÏó
+            // å·²ç»è¿æ¥çš„Socketè¯å…¸å¯¹è±¡
             this.ConnectedSocketsDict = new Dictionary<Socket, bool>(numConnections);
 
             this.readPool = new SocketAsyncEventArgsPool(numConnections);
@@ -170,7 +170,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// Ìí¼Ósocket¶ÔÏó
+        /// æ·»åŠ socketå¯¹è±¡
         /// </summary>
         /// <param name="socket"></param>
         private void AddSocket(Socket socket)
@@ -182,7 +182,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// É¾³ısocket¶ÔÏó
+        /// åˆ é™¤socketå¯¹è±¡
         /// </summary>
         /// <param name="socket"></param>
         private void RemoveSocket(Socket socket)
@@ -194,7 +194,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// ²éÕÒSocket¶ÔÏó
+        /// æŸ¥æ‰¾Socketå¯¹è±¡
         /// </summary>
         /// <param name="socket"></param>
         /// <returns></returns>
@@ -220,7 +220,7 @@ namespace Server.TCP
             try
             {
                 Socket s = aut.CurrentSocket;
-                if (!FindSocket(s)) //ÒÑ¾­¹Ø±ÕÁË
+                if (!FindSocket(s)) //å·²ç»å…³é—­äº†
                 {
                     return;
                 }
@@ -236,10 +236,10 @@ namespace Server.TCP
                 }
 
                 // Decrement the counter keeping track of the total number of clients connected to the server.
-                this.semaphoreAcceptedClients.Release(); //ÓĞÊ±»á³¬¹ı×î´óÊı
+                this.semaphoreAcceptedClients.Release(); //æœ‰æ—¶ä¼šè¶…è¿‡æœ€å¤§æ•°
                 Interlocked.Decrement(ref this.numConnectedSockets);
 
-                /// ¶Ï¿ª³É¹¦Í¨Öªº¯Êı
+                /// æ–­å¼€æˆåŠŸé€šçŸ¥å‡½æ•°
                 if (null != SocketClosed)
                 {
                     SocketClosed(this, e);
@@ -264,13 +264,13 @@ namespace Server.TCP
             }
             finally
             {
-                aut.CurrentSocket = null; //ÊÍ·Å
-                aut.Tag = null; //ÊÍ·Å
+                aut.CurrentSocket = null; //é‡Šæ”¾
+                aut.Tag = null; //é‡Šæ”¾
 
                 // Free the SocketAsyncEventArg so they can be reused by another client.
                 if (e.LastOperation == SocketAsyncOperation.Send)
                 {
-                    e.SetBuffer(null, 0, 0); //»ØÊÕÄÚ´æ
+                    e.SetBuffer(null, 0, 0); //å›æ”¶å†…å­˜
                     this.writePool.Push(e);
                 }
                 else if (e.LastOperation == SocketAsyncOperation.Receive)
@@ -328,7 +328,7 @@ namespace Server.TCP
         {
             try
             {
-                if (null == this.listenSocket) return; //ÒÑ¾­²»ÔÚÕìÌı
+                if (null == this.listenSocket) return; //å·²ç»ä¸åœ¨ä¾¦å¬
 
                 this.ProcessAccept(e);
             }
@@ -377,7 +377,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// ´Ósocket½ÓÊÕÊı¾İ
+        /// ä»socketæ¥æ”¶æ•°æ®
         /// </summary>
         /// <param name="s"></param>
         /// <param name="readEventArgs"></param>
@@ -397,7 +397,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// ÏòSocket·¢ËÍÊı¾İ
+        /// å‘Socketå‘é€æ•°æ®
         /// </summary>
         /// <param name="writeEventArgs"></param>
         /// <returns></returns>
@@ -410,7 +410,7 @@ namespace Server.TCP
                 Socket s = (writeEventArgs.UserToken as AsyncUserToken).CurrentSocket;
                 return s.SendAsync(writeEventArgs);
             }
-            catch (Exception ex) //´Ë´¦ÓĞ¿ÉÄÜÊÇ¶ÔÏó·Ç·¨µÈÒì³£, ÀıÈçSocket¶ÔÏóÒÑ¾­ÎŞĞ§
+            catch (Exception ex) //æ­¤å¤„æœ‰å¯èƒ½æ˜¯å¯¹è±¡éæ³•ç­‰å¼‚å¸¸, ä¾‹å¦‚Socketå¯¹è±¡å·²ç»æ— æ•ˆ
             {
                 LogManager.WriteLog(LogTypes.Error, string.Format("SocketListener::_ReceiveAsync got exception {0}", ex.ToString()));
                 exception = true;
@@ -420,12 +420,12 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// Ïò¿Í»§¶Ë·¢ËÍÊı¾İ
+        /// å‘å®¢æˆ·ç«¯å‘é€æ•°æ®
         /// </summary>
         /// <param name="data"></param>
         internal bool SendData(Socket s, TCPOutPacket tcpOutPacket)
         {
-            SocketAsyncEventArgs writeEventArgs = this.writePool.Pop(); //Ïß³Ì°²È«µÄ²Ù×÷
+            SocketAsyncEventArgs writeEventArgs = this.writePool.Pop(); //çº¿ç¨‹å®‰å…¨çš„æ“ä½œ
             if (null == writeEventArgs)
             {
                 writeEventArgs = new SocketAsyncEventArgs();
@@ -433,7 +433,7 @@ namespace Server.TCP
                 writeEventArgs.UserToken = new AsyncUserToken() { CurrentSocket = null, Tag = null };
             }
 
-            //×Ö½ÚÅÅĞò
+            //å­—èŠ‚æ’åº
             //DataHelper.SortBytes(tcpOutPacket.GetPacketBytes(), 0, tcpOutPacket.PacketDataSize);
 
             writeEventArgs.SetBuffer(tcpOutPacket.GetPacketBytes(), 0, tcpOutPacket.PacketDataSize);
@@ -458,7 +458,7 @@ namespace Server.TCP
         {
             SocketAsyncEventArgs readEventArgs = null;
 
-            //Ôö¼Ó¼ÆÊıÆ÷
+            //å¢åŠ è®¡æ•°å™¨
             Interlocked.Increment(ref this.numConnectedSockets);
 
             // Get the socket for the accepted client connection and put it into the
@@ -492,7 +492,7 @@ namespace Server.TCP
                 {
                 }
 
-                //¼õÉÙ¼ÆÊıÆ÷
+                //å‡å°‘è®¡æ•°å™¨
                 Interlocked.Decrement(ref this.numConnectedSockets);
                 this.StartAccept(e);
                 return;
@@ -504,7 +504,24 @@ namespace Server.TCP
             BitConverter.GetBytes((uint)1).CopyTo(inOptionValues, 0);
             BitConverter.GetBytes((uint)120000).CopyTo(inOptionValues, sizeof(uint));
             BitConverter.GetBytes((uint)5000).CopyTo(inOptionValues, sizeof(uint) * 2);
-            s.IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
+            if (OperatingSystem.IsWindows())
+            {
+                try
+                {
+                    s.IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
+                }
+                catch { }
+            }
+            else
+            {
+                try
+                {
+                    s.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.KeepAlive, true);
+                    s.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Tcp, System.Net.Sockets.SocketOptionName.TcpKeepAliveTime, 120);
+                    s.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Tcp, System.Net.Sockets.SocketOptionName.TcpKeepAliveInterval, 5);
+                }
+                catch { }
+            }
 
             AddSocket(s);
 
@@ -551,10 +568,10 @@ namespace Server.TCP
 
                 // Get the message received from the listener.
                 //e.Buffer, e.Offset, e.bytesTransferred);
-                //Í¨ÖªÍâ²¿ÓĞĞÂµÄsocketµ½´ï
+                //é€šçŸ¥å¤–éƒ¨æœ‰æ–°çš„socketåˆ°è¾¾
                 if (null != SocketReceived)
                 {
-                    //×Ö½ÚÅÅĞò
+                    //å­—èŠ‚æ’åº
                     //DataHelper.SortBytes(e.Buffer, e.Offset, e.BytesTransferred);
                     try
                     {
@@ -562,7 +579,7 @@ namespace Server.TCP
                     }
                     catch (System.Exception ex)
                     {
-                        //ËùÓĞÒì³£Ó¦µ±ÔÚÏÂ²ã²¶»ñ£¬²»Ó¦Å×µ½Õâ²ãÀ´
+                        //æ‰€æœ‰å¼‚å¸¸åº”å½“åœ¨ä¸‹å±‚æ•è·ï¼Œä¸åº”æŠ›åˆ°è¿™å±‚æ¥
                         LogManager.WriteException(ex.ToString());
                         recvReturn = false;
                     }
@@ -570,7 +587,7 @@ namespace Server.TCP
 
                 if (recvReturn)
                 {
-                    //¼ÌĞø½ÓÊÕÁ÷³Ì(ÒÔÊı¾İÁ÷ÎªÇı¶¯)
+                    //ç»§ç»­æ¥æ”¶æµç¨‹(ä»¥æ•°æ®æµä¸ºé©±åŠ¨)
                     Boolean willRaiseEvent = _ReceiveAsync(e);
                     if (!willRaiseEvent)
                     {
@@ -596,7 +613,7 @@ namespace Server.TCP
         /// <param name="e">SocketAsyncEventArg associated with the completed send operation.</param>
         private void ProcessSend(SocketAsyncEventArgs e)
         {
-            /// ·¢ËÍÊı¾İÍ¨Öªº¯Êı
+            /// å‘é€æ•°æ®é€šçŸ¥å‡½æ•°
             if (null != SocketSended)
             {
                 SocketSended(this, e);
@@ -611,11 +628,11 @@ namespace Server.TCP
                 //this.CloseClientSocket(e);
             }
 
-            //Ê²Ã´ÊÂÇé¶¼²»×ö, ÊÕ»ØÊ¹ÓÃµÄeºÍbuffer
+            //ä»€ä¹ˆäº‹æƒ…éƒ½ä¸åš, æ”¶å›ä½¿ç”¨çš„eå’Œbuffer
             // Free the SocketAsyncEventArg so they can be reused by another client.
-            e.SetBuffer(null, 0, 0); //»ØÊÕÄÚ´æ
-            (e.UserToken as AsyncUserToken).CurrentSocket = null; //ÊÍ·Å
-            (e.UserToken as AsyncUserToken).Tag = null; //ÊÍ·Å
+            e.SetBuffer(null, 0, 0); //å›æ”¶å†…å­˜
+            (e.UserToken as AsyncUserToken).CurrentSocket = null; //é‡Šæ”¾
+            (e.UserToken as AsyncUserToken).Tag = null; //é‡Šæ”¾
             this.writePool.Push(e);
         }
 
@@ -625,7 +642,7 @@ namespace Server.TCP
         /// <param name="localEndPoint">The endpoint which the server will listening for connection requests on.</param>
         internal void Start(string ip, int port)
         {
-            if ("" == ip) ip = "0.0.0.0"; //·ÀÖ¹IPÎŞĞ§
+            if ("" == ip) ip = "0.0.0.0"; //é˜²æ­¢IPæ— æ•ˆ
 
             // Get endpoint for the listener.
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -644,7 +661,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// ¹Ø±ÕÕìÌıµÄSocket
+        /// å…³é—­ä¾¦å¬çš„Socket
         /// </summary>
         public void Stop()
         {
@@ -654,7 +671,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// ¹Ø±ÕÖ¸¶¨µÄSocketÁ¬½Ó
+        /// å…³é—­æŒ‡å®šçš„Socketè¿æ¥
         /// </summary>
         /// <param name="s"></param>
         private void CloseSocket(Socket s)
@@ -668,7 +685,7 @@ namespace Server.TCP
                 // Throws if client process has already closed.
             }
 
-            //ÓÉ½ÓÊÕÊÂ¼şÈ¥ÊÍ·Å´¦Àí
+            //ç”±æ¥æ”¶äº‹ä»¶å»é‡Šæ”¾å¤„ç†
         }
 
         /// <summary>
@@ -689,7 +706,7 @@ namespace Server.TCP
                 acceptEventArg.AcceptSocket = null;
             }
 
-            this.semaphoreAcceptedClients.WaitOne(); //¿ØÖÆ×ÜµÄÁ¬½ÓÊı
+            this.semaphoreAcceptedClients.WaitOne(); //æ§åˆ¶æ€»çš„è¿æ¥æ•°
             Boolean willRaiseEvent = this.listenSocket.AcceptAsync(acceptEventArg);
             if (!willRaiseEvent)
             {

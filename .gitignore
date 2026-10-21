@@ -2,6 +2,19 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+# Backup directories
+server_backup_*/
+
+# Unity junk
+client/src/Library/
+client/src/Temp/
+client/src/Obj/
+client/src/Build/
+client/src/Builds/
+client/src/Logs/
+client/src/UserSettings/
+client/src/MemoryCaptures/
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -35,6 +48,9 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
+# Unignore server projects
+!server/**/*.csproj
+!server/**/*.sln
 *.suo
 *.tmp
 *.user

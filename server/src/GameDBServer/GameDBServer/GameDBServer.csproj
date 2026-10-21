@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>GameDBServer</AssemblyName>
+    <RootNamespace>GameDBServer</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);CS0618;CS0612;CS1591;CS7035</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Loại trừ file Keyboard.cs vì chứa P/Invoke Windows không sử dụng -->
+    <Compile Remove="Keyboard.cs" />
+    <!-- Loại trừ các file Guild cũ rời rạc (toàn bộ logic đã có trong GuildManager.cs) -->
+    <Compile Remove="Logic/KT_GuildLogic/GuildManager_OLD.cs" />
+    <Compile Remove="Logic/KT_GuildLogic/Guild_*.cs" />
+    <Compile Include="Logic/KT_GuildLogic/Guild_Task.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="AppConfig.xml" Condition="Exists('AppConfig.xml')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GameServer.xml" Condition="Exists('GameServer.xml')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    <PackageReference Include="protobuf-net" Version="2.4.6" />
+    <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+  </ItemGroup>
+
+</Project>
