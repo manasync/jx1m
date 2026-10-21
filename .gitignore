@@ -110,3 +110,8 @@ project.assets.json
 *.nuget.dgspec.json
 .idea/
 *log/
+
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
