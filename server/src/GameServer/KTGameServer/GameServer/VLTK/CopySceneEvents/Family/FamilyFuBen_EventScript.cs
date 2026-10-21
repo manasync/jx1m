@@ -195,7 +195,7 @@ namespace GameServer.KiemThe.CopySceneEvents.Family
             /// Nếu không có thành viên
             if (familyMembers.Count <= 0)
             {
-                PlayerManager.ShowNotification(player, "Không có thành viên, không thể tham gia Vượt ải gia tộc!");
+                KTPlayerManager.ShowNotification(player, "Không có thành viên, không thể tham gia Vượt ải gia tộc!");
                 return;
             }
 
@@ -282,13 +282,13 @@ namespace GameServer.KiemThe.CopySceneEvents.Family
             /// Nếu không tồn tại
             if (script == null)
             {
-                PlayerManager.ShowNotification(player, "Đạo cụ này chỉ có thể sử dụng trong phụ bản Vượt ải gia tộc!");
+                KTPlayerManager.ShowNotification(player, "Đạo cụ này chỉ có thể sử dụng trong phụ bản Vượt ải gia tộc!");
                 return;
             }
             /// Nếu không phải phụ bản Vượt ải gia tộc
             else if (!(script is FamilyFuBen_Script_Main))
             {
-                PlayerManager.ShowNotification(player, "Đạo cụ này chỉ có thể sử dụng trong phụ bản Vượt ải gia tộc!");
+                KTPlayerManager.ShowNotification(player, "Đạo cụ này chỉ có thể sử dụng trong phụ bản Vượt ải gia tộc!");
                 return;
             }
 

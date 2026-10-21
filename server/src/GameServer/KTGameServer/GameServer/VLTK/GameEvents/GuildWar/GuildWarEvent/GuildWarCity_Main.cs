@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Interop;
 using System.Xml.Serialization;
 
 using static GameServer.Logic.KTMapManager;

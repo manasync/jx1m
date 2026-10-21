@@ -372,7 +372,7 @@ namespace KF.Client
                 {
                     if (KuaFuService == null)
                     {
-                        tmpKuaFuService = (IKuaFuCopyService)Activator.GetObject(typeof(IKuaFuCopyService), RemoteServiceUri);
+                        tmpKuaFuService = (IKuaFuCopyService)Server.Tools.RemotingHelper.GetObject(typeof(IKuaFuCopyService), RemoteServiceUri);
                         if (null == tmpKuaFuService)
                         {
                             return null;

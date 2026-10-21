@@ -210,10 +210,17 @@ namespace GameServer.Core.Executor
 
 
 
-        [DllImport("kernel32.dll")]
-        extern static bool QueryPerformanceCounter(ref long x);
-        [DllImport("kernel32.dll")]
-        extern static bool QueryPerformanceFrequency(ref long x);
+        private static bool QueryPerformanceCounter(ref long x)
+        {
+            x = System.Diagnostics.Stopwatch.GetTimestamp();
+            return true;
+        }
+
+        private static bool QueryPerformanceFrequency(ref long x)
+        {
+            x = System.Diagnostics.Stopwatch.Frequency;
+            return true;
+        }
 
         private static long _StartCounter = 0;
         private static long _CounterPerSecs = 0;
@@ -296,8 +303,10 @@ namespace GameServer.Core.Executor
             }
         }
 
-        [DllImport("winmm.dll")]
-        public static extern uint timeGetTime();
+        public static uint timeGetTime()
+        {
+            return (uint)Environment.TickCount;
+        }
 
         #region
 

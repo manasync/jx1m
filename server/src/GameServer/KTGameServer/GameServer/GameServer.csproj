@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>GameServer</AssemblyName>
+    <RootNamespace>GameServer</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);CS0618;CS0612;CS1591;CS7035</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tmsk.Contract\Tmsk.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Loại trừ tất cả file backup cũ -->
+    <Compile Remove="**/*bak*/**;**/*bak*" />
+    <Compile Remove="Logic/ProcessTask_bak.cs" />
+    <Compile Remove="Logic/ProcessTask.bak.cs" />
+    <Compile Remove="VLTK/KTGlobal.bak.cs" />
+    <!-- Loại trừ file Task cũ không dùng -->
+    <Compile Remove="Logic/TaskAwards.cs" />
+    <!-- Loại trừ module PushMessage Getui (không sử dụng trong game) -->
+    <Compile Remove="PushMessage/**" />
+    <!-- Loại trừ module SafeData cũ (không sử dụng trong game) -->
+    <Compile Remove="SafeData/**" />
+    <!-- Loại trừ file JingJiRanking cũ (MU Online) -->
+    <Compile Remove="Server/CmdProcesser/JingJiRankingListCmdProcessor.cs" />
+    <!-- Loại trừ HWID checker cũ -->
+    <Compile Remove="Tools/SHA2Helper.cs" />
+    <!-- Loại trừ SkillData prototype dở dang -->
+    <Compile Remove="VLTK/Entities/SkillData.cs" />
+    <!-- Loại trừ Phụ bản Family dở dang -->
+    <Compile Remove="VLTK/CopySceneEvents/Family/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="2.4.6" />
+    <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
+    <PackageReference Include="MoonSharp" Version="2.0.0.0" />
+    <PackageReference Include="NeoLua" Version="1.3.14" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+  </ItemGroup>
+
+</Project>

@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine.Networking.Types;
 using static GameServer.KiemThe.Logic.KTMonsterManager;
 using static GameServer.Logic.KTMapManager;
 

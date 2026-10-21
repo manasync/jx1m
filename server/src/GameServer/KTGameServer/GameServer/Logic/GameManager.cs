@@ -24,7 +24,8 @@ namespace GameServer.Logic
 
         public static string ActiveGiftCodeUrl { get; set; } = "";
 
-        public static string KTCoinService { get; set; } = "http://sdk.vokiem.mobi/UserKTCoinService.aspx";
+        // Đổi về SDK nạp thẻ của bạn; mặc định localhost thay cho sdk.vokiem.mobi của chủ cũ.
+        public static string KTCoinService { get; set; } = "http://localhost/UserKTCoinService.aspx";
 
 
         /// <summary>

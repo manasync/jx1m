@@ -1,4 +1,4 @@
-﻿using GameServer.Core.Executor;
+using GameServer.Core.Executor;
 using GameServer.KiemThe;
 using GameServer.KiemThe.Logic;
 using GameServer.KiemThe.Logic.Manager;
@@ -182,32 +182,7 @@ namespace GameServer
             DeleteFile("Stop.txt");
             DeleteFile("GameServerStop.txt");
 
-            if (!GCSettings.IsServerGC && Environment.ProcessorCount > 2)
-            {
-                SysConOut.WriteLine(string.Format("Server Running Model  :{0}, {1}", GCSettings.IsServerGC ? "GameCenter" : "GameServer", GCSettings.LatencyMode));
-
-                Console.WriteLine("Settings GameCenter ! ");
-
-                string configFile = Process.GetCurrentProcess().MainModule.FileName + ".config";
-                XElement xml = XElement.Load(configFile);
-                XElement xml1 = xml.Element("runtime");
-                if (null == xml1)
-                {
-                    xml.SetElementValue("runtime", "");
-                    xml1 = xml.Element("runtime");
-                }
-                xml1.SetElementValue("gcServer", "");
-                xml1.Element("gcServer").SetAttributeValue("enabled", "true");
-                xml.Save(configFile);
-
-                Console.WriteLine("Settings Server OK! Please Restart!");
-                Console.Read();
-                return;
-            }
-            else
-            {
-                SysConOut.WriteLine(string.Format("Server Running Model :{0}, {1}", GCSettings.IsServerGC ? "GameCenter" : "GameServer", GCSettings.LatencyMode));
-            }
+            SysConOut.WriteLine(string.Format("Server Running Model: {0}, LatencyMode: {1}", GCSettings.IsServerGC ? "ServerGC" : "WorkstationGC", GCSettings.LatencyMode));
 #if Windows
 
             #region Prosecc Console windows
@@ -536,6 +511,7 @@ namespace GameServer
             catch (System.Exception ex)
             {
                 SysConOut.WriteLine("Exception was detected when Starting the Server... Kill Process after 5s!");
+                SysConOut.WriteLine(ex.ToString());
                 Thread.Sleep(5000);
                 LogManager.WriteException(ex.ToString());
                 Process.GetCurrentProcess().Kill();

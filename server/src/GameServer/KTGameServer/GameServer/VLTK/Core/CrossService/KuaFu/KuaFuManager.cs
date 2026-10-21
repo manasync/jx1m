@@ -77,7 +77,8 @@ namespace GameServer.Logic
                     return false;
                 }
 
-                System.Runtime.Remoting.RemotingConfiguration.Configure(Process.GetCurrentProcess().MainModule.FileName + ".config", false);
+                // Remoting disabled in modern .NET
+                // System.Runtime.Remoting.RemotingConfiguration.Configure(Process.GetCurrentProcess().MainModule.FileName + ".config", false);
 
                 if (!YongZheZhanChangClient.getInstance().initialize(coreInterface))
                 {

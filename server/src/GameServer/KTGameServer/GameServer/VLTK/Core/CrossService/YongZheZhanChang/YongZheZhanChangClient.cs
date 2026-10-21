@@ -8,7 +8,6 @@ using KF.Contract.Data;
 using Tmsk.Contract;
 using System.Globalization;
 using System.Threading;
-using System.Runtime.Remoting.Messaging;
 using KF.Contract;
 using System.Diagnostics;
 using System.Configuration;
@@ -302,7 +301,7 @@ namespace KF.Client
                 {
                     if (KuaFuService == null)
                     {
-                        kuaFuService = (IYongZheZhanChangService)Activator.GetObject(typeof(IYongZheZhanChangService), RemoteServiceUri);
+                        kuaFuService = (IYongZheZhanChangService)Server.Tools.RemotingHelper.GetObject(typeof(IYongZheZhanChangService), RemoteServiceUri);
                         if (null == kuaFuService)
                         {
                             return null;

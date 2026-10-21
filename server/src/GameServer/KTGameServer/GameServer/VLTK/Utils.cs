@@ -32,33 +32,8 @@ namespace GameServer.KiemThe
         /// <returns></returns>
         public static bool SendTelegram(string NOIDUNG)
         {
-            Thread _SendTeleGram = new Thread(() =>
-            {
-                try
-                {
-                    string URL = "https://api.telegram.org/bot6429774070:AAEgdzdw8gpJIvC1Nx6h7kypw79ocCJVQ58/sendMessage?chat_id=2123123889&text=" + UrlEncode(NOIDUNG);
-
-                    ServicePointManager.Expect100Continue = true;
-                    //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                    //       | SecurityProtocolType.Tls11
-                    //       | SecurityProtocolType.Tls12
-                    //       | SecurityProtocolType.Ssl3;
-
-                    WebClient wc = new WebClient();
-
-                    var result = wc.DownloadString(URL);
-
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-
-                }
-            });
-            _SendTeleGram.IsBackground = false;
-            _SendTeleGram.Start();
-
+            // Phone-home removed: đã gỡ Telegram bot của chủ cũ (token + chat_id hardcode).
+            // Muốn bật lại cho server của bạn: điền token/chat_id riêng và gửi qua WebClient.
             return true;
         }
 

@@ -96,3 +96,17 @@ crashlytics-build.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Modern .NET build outputs
+**/bin/Debug/net6.0/
+**/bin/Release/net6.0/
+**/bin/Debug/net6.0\log/
+**/obj/Debug/
+**/obj/Release/
+*.nuget.cache
+*.nuget.g.props
+*.nuget.g.targets
+project.assets.json
+*.nuget.dgspec.json
+.idea/
+*log/

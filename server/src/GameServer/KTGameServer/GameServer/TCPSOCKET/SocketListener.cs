@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -14,41 +14,41 @@ using GameServer.Core.Executor;
 
 namespace Server.TCP
 {
-    /*臭名昭著的指令乱序分析:
-     * 1. 如果A socket的接收事件在处理过程中，被其他线程发送时错误，关闭socket，此时TCPInPacket中的socket句柄会被清空，导致错误。但是其他线程由于锁的作用，无法清空其
-     * 正在处理的TCPInPacket内部数据，所以不会导致其指令乱序，但是当其接收异常，再次处理关闭时，由于无法在字典中找到TCPInPacket所以，无法对TCPInPacket不再处理，TCPInPacket
-     * 被其他线程处理清空掉，此时逻辑是正确的，只是会再不加判断的情况下导致多次减少socket计数。
-     * 2. 发送时如果处理关闭操作，会导致当对方关闭，自己发送失败时，多次执行关闭操作。但是对于指令流乱序没有影响。
-     * 3. 如果A socket的接收时间在处理过程中，执行发送出错，会关闭socket，执行清空内存的操作，此时TCPInPacket中的socket句柄会被清空，导致错误。并且没有终止操作，继续递归循环处理。
-     * 同时由于自己将TCPInPacket归还给了队列中，其他接收就会有机会取出使用，当其他socket 接收取出使用时，会重新对于socket赋值，导致A socket的接收中的发送处理逻辑出错，发送给了
-     * 错误的客户端对象。同时，由于此时自己的递归循环退出时可能会遗留半截指令数据。其他使用这个TCPInPacket的socket接收到的数据，进去其继续进行处理则会导致乱序的指令流出现。
-     * 就是A 的遗留半截指令，加上其他例如B的新的指令数据，导致B后续接收全部出错。呵呵。终于搞懂了，YES。
-     * 解决方案:
-     * a. 发送时不进行关闭处理，交给接收去做。
-     * b. 接收时，如果出现错误，终止递归循环，退出。
-     * c. 接收部分，发送数据处理出错，则立刻执行关闭TMSKSocket操作。
-     * d. 就是原则上，关闭操作交给接收去处理。
+    /*鑷悕鏄憲鐨勬寚浠や贡搴忓垎鏋�:
+     * 1. 濡傛灉A socket鐨勬帴鏀朵簨浠跺湪澶勭悊杩囩▼涓紝琚叾浠栫嚎绋嬪彂閫佹椂閿欒锛屽叧闂璼ocket锛屾鏃禩CPInPacket涓殑socket鍙ユ焺浼氳娓呯┖锛屽鑷撮敊璇�備絾鏄叾浠栫嚎绋嬬敱浜庨攣鐨勪綔鐢紝鏃犳硶娓呯┖鍏�
+     * 姝ｅ湪澶勭悊鐨凾CPInPacket鍐呴儴鏁版嵁锛屾墍浠ヤ笉浼氬鑷村叾鎸囦护涔卞簭锛屼絾鏄綋鍏舵帴鏀跺紓甯革紝鍐嶆澶勭悊鍏抽棴鏃讹紝鐢变簬鏃犳硶鍦ㄥ瓧鍏镐腑鎵惧埌TCPInPacket鎵�浠ワ紝鏃犳硶瀵筎CPInPacket涓嶅啀澶勭悊锛孴CPInPacket
+     * 琚叾浠栫嚎绋嬪鐞嗘竻绌烘帀锛屾鏃堕�昏緫鏄纭殑锛屽彧鏄細鍐嶄笉鍔犲垽鏂殑鎯呭喌涓嬪鑷村娆″噺灏憇ocket璁℃暟銆�
+     * 2. 鍙戦�佹椂濡傛灉澶勭悊鍏抽棴鎿嶄綔锛屼細瀵艰嚧褰撳鏂瑰叧闂紝鑷繁鍙戦�佸け璐ユ椂锛屽娆℃墽琛屽叧闂搷浣溿�備絾鏄浜庢寚浠ゆ祦涔卞簭娌℃湁褰卞搷銆�
+     * 3. 濡傛灉A socket鐨勬帴鏀舵椂闂村湪澶勭悊杩囩▼涓紝鎵ц鍙戦�佸嚭閿欙紝浼氬叧闂璼ocket锛屾墽琛屾竻绌哄唴瀛樼殑鎿嶄綔锛屾鏃禩CPInPacket涓殑socket鍙ユ焺浼氳娓呯┖锛屽鑷撮敊璇�傚苟涓旀病鏈夌粓姝㈡搷浣滐紝缁х画閫掑綊寰幆澶勭悊銆�
+     * 鍚屾椂鐢变簬鑷繁灏員CPInPacket褰掕繕缁欎簡闃熷垪涓紝鍏朵粬鎺ユ敹灏变細鏈夋満浼氬彇鍑轰娇鐢紝褰撳叾浠杝ocket 鎺ユ敹鍙栧嚭浣跨敤鏃讹紝浼氶噸鏂板浜巗ocket璧嬪�硷紝瀵艰嚧A socket鐨勬帴鏀朵腑鐨勫彂閫佸鐞嗛�昏緫鍑洪敊锛屽彂閫佺粰浜�
+     * 閿欒鐨勫鎴风瀵硅薄銆傚悓鏃讹紝鐢变簬姝ゆ椂鑷繁鐨勯�掑綊寰幆閫�鍑烘椂鍙兘浼氶仐鐣欏崐鎴寚浠ゆ暟鎹�傚叾浠栦娇鐢ㄨ繖涓猅CPInPacket鐨剆ocket鎺ユ敹鍒扮殑鏁版嵁锛岃繘鍘诲叾缁х画杩涜澶勭悊鍒欎細瀵艰嚧涔卞簭鐨勬寚浠ゆ祦鍑虹幇銆�
+     * 灏辨槸A 鐨勯仐鐣欏崐鎴寚浠わ紝鍔犱笂鍏朵粬渚嬪B鐨勬柊鐨勬寚浠ゆ暟鎹紝瀵艰嚧B鍚庣画鎺ユ敹鍏ㄩ儴鍑洪敊銆傚懙鍛点�傜粓浜庢悶鎳備簡锛孻ES銆�
+     * 瑙ｅ喅鏂规:
+     * a. 鍙戦�佹椂涓嶈繘琛屽叧闂鐞嗭紝浜ょ粰鎺ユ敹鍘诲仛銆�
+     * b. 鎺ユ敹鏃讹紝濡傛灉鍑虹幇閿欒锛岀粓姝㈤�掑綊寰幆锛岄��鍑恒��
+     * c. 鎺ユ敹閮ㄥ垎锛屽彂閫佹暟鎹鐞嗗嚭閿欙紝鍒欑珛鍒绘墽琛屽叧闂璗MSKSocket鎿嶄綔銆�
+     * d. 灏辨槸鍘熷垯涓婏紝鍏抽棴鎿嶄綔浜ょ粰鎺ユ敹鍘诲鐞嗐��
      */
 
     /// <summary>
-    /// 服务器侦听类
+    /// 鏈嶅姟鍣ㄤ睛鍚被
     /// </summary>
     public sealed class SocketListener
     {
         public int GTotalSendCount = 0;
 
         /// <summary>
-        /// 是否开启ip白名单过滤
+        /// 鏄惁寮�鍚痠p鐧藉悕鍗曡繃婊�
         /// </summary>
         private bool EnabledIPListFilter = false;
 
         /// <summary>
-        /// IP白名单列表
+        /// IP鐧藉悕鍗曞垪琛�
         /// </summary>
         private Dictionary<string, bool> IPWhiteList = new Dictionary<string, bool>();
 
         /// <summary>
-        /// 缓冲区的大小
+        /// 缂撳啿鍖虹殑澶у皬
         /// </summary>
         Int32 ReceiveBufferSize;
 
@@ -68,12 +68,12 @@ namespace Server.TCP
         //private Int32 numConnectedSockets;
 
         /// <summary>
-        /// 已经连接的TMSKSocket词典对象
+        /// 宸茬粡杩炴帴鐨凾MSKSocket璇嶅吀瀵硅薄
         /// </summary>
         private Dictionary<TMSKSocket, bool> ConnectedSocketsDict;
 
         /// <summary>
-        /// 外部获取总的连接个数
+        /// 澶栭儴鑾峰彇鎬荤殑杩炴帴涓暟
         /// </summary>
         public Int32 ConnectedSocketsCount
         {
@@ -102,7 +102,7 @@ namespace Server.TCP
         /// <summary>
         /// Pool of reusable SocketAsyncEventArgs objects for read socket operations.
         /// </summary>
-        public SocketAsyncEventArgsPool readPool; //线程安全
+        public SocketAsyncEventArgsPool readPool; //绾跨▼瀹夊叏
 
         public int ReadPoolCount
         {
@@ -112,7 +112,7 @@ namespace Server.TCP
         /// <summary>
         /// Pool of reusable SocketAsyncEventArgs objects for write socket operations.
         /// </summary>
-        public SocketAsyncEventArgsPool writePool; //线程安全
+        public SocketAsyncEventArgsPool writePool; //绾跨▼瀹夊叏
 
         public int WritePoolCount
         {
@@ -130,7 +130,7 @@ namespace Server.TCP
         private long totalBytesRead;
 
         /// <summary>
-        /// 获取总的接收的字节数
+        /// 鑾峰彇鎬荤殑鎺ユ敹鐨勫瓧鑺傛暟
         /// </summary>
         public long TotalBytesReadSize
         {
@@ -148,7 +148,7 @@ namespace Server.TCP
         private long totalBytesWrite;
 
         /// <summary>
-        /// 获取总的发送的字节数
+        /// 鑾峰彇鎬荤殑鍙戦�佺殑瀛楄妭鏁�
         /// </summary>
         public long TotalBytesWriteSize
         {
@@ -160,11 +160,11 @@ namespace Server.TCP
             }
         }
 
-        //是否不再接受新的用户(默认不接受)
+        //鏄惁涓嶅啀鎺ュ彈鏂扮殑鐢ㄦ埛(榛樿涓嶆帴鍙�)
         private bool _DontAccept = true;
 
         /// <summary>
-        /// 是否不再接受新的用户
+        /// 鏄惁涓嶅啀鎺ュ彈鏂扮殑鐢ㄦ埛
         /// </summary>
         public bool DontAccept
         {
@@ -172,16 +172,16 @@ namespace Server.TCP
             set { _DontAccept = value; }
         }
 
-        /// 连接成功通知函数
+        /// 杩炴帴鎴愬姛閫氱煡鍑芥暟
         public event SocketConnectedEvnetHandler SocketConnected = null;
 
-        /// 断开成功通知函数
+        /// 鏂紑鎴愬姛閫氱煡鍑芥暟
         public event SocketClosedEventHandler SocketClosed = null;
 
-        /// 接收数据通知函数
+        /// 鎺ユ敹鏁版嵁閫氱煡鍑芥暟
         public event SocketReceivedEventHandler SocketReceived = null;
 
-        /// 发送数据通知函数
+        /// 鍙戦�佹暟鎹�氱煡鍑芥暟
         public event SocketSendedEventHandler SocketSended = null;
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Server.TCP
             this.bufferManager = new BufferManager(receiveBufferSize * readBuffNum,
                 receiveBufferSize);
 
-            // 已经连接的TMSKSocket词典对象
+            // 宸茬粡杩炴帴鐨凾MSKSocket璇嶅吀瀵硅薄
             this.ConnectedSocketsDict = new Dictionary<TMSKSocket, bool>(readBuffNum);
 
             this.readPool = new SocketAsyncEventArgsPool(readBuffNum);
@@ -215,7 +215,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 添加socket对象
+        /// 娣诲姞socket瀵硅薄
         /// </summary>
         /// <param name="socket"></param>
         private void AddSocket(TMSKSocket socket)
@@ -227,7 +227,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 删除socket对象
+        /// 鍒犻櫎socket瀵硅薄
         /// </summary>
         /// <param name="socket"></param>
         private void RemoveSocket(TMSKSocket socket)
@@ -239,7 +239,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 查找TMSKSocket对象
+        /// 鏌ユ壘TMSKSocket瀵硅薄
         /// </summary>
         /// <param name="socket"></param>
         /// <returns></returns>
@@ -267,7 +267,7 @@ namespace Server.TCP
             {
                 s = aut.CurrentSocket;
 
-                string ip = "未知";
+                string ip = "鏈煡";
 
                 try
                 {
@@ -282,13 +282,13 @@ namespace Server.TCP
             }
             finally
             {
-                aut.CurrentSocket = null; //释放
-                aut.Tag = null; //释放
+                aut.CurrentSocket = null; //閲婃斁
+                aut.Tag = null; //閲婃斁
 
                 // Free the SocketAsyncEventArg so they can be reused by another client.
                 if (e.LastOperation == SocketAsyncOperation.Send)
                 {
-                    e.SetBuffer(null, 0, 0); //回收内存
+                    e.SetBuffer(null, 0, 0); //鍥炴敹鍐呭瓨
                     if (GameManager.FlagOptimizeThreadPool3)
                     {
                         //TMSKThreadStaticClass.GetInstance().PushReadSocketAsyncEventArgs(e);
@@ -369,7 +369,7 @@ namespace Server.TCP
         {
             try
             {
-                if (null == this.listenSocket) return; //已经不在侦听
+                if (null == this.listenSocket) return; //宸茬粡涓嶅湪渚﹀惉
 
                 this.ProcessAccept(e);
             }
@@ -418,7 +418,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 从socket接收数据
+        /// 浠巗ocket鎺ユ敹鏁版嵁
         /// </summary>
         /// <param name="s"></param>
         /// <param name="readEventArgs"></param>
@@ -439,7 +439,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 向TMSKSocket发送数据
+        /// 鍚慣MSKSocket鍙戦�佹暟鎹�
         /// </summary>
         /// <param name="writeEventArgs"></param>
         /// <returns></returns>
@@ -452,7 +452,7 @@ namespace Server.TCP
                 TMSKSocket s = (writeEventArgs.UserToken as AsyncUserToken).CurrentSocket;
                 return s.SendAsync(writeEventArgs);
             }
-            catch (Exception ex) //此处有可能是对象非法等异常, 例如TMSKSocket对象已经无效
+            catch (Exception ex) //姝ゅ鏈夊彲鑳芥槸瀵硅薄闈炴硶绛夊紓甯�, 渚嬪TMSKSocket瀵硅薄宸茬粡鏃犳晥
             {
                 LogManager.WriteLog(LogTypes.Error, string.Format("Exception at SocketListener::_SendAsync.\n{0}", ex.ToString()));
                 exception = true;
@@ -462,27 +462,27 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 向客户端发送数据
+        /// 鍚戝鎴风鍙戦�佹暟鎹�
         /// </summary>
         /// <param name="data"></param>
         internal bool SendData(TMSKSocket s, TCPOutPacket tcpOutPacket, bool pushBack = true)
         {
             if (s != null && tcpOutPacket != null)
             {
-                // 广播的时候多个客户端同时使用同一个byte[]，要特别注意
+                // 骞挎挱鐨勬椂鍊欏涓鎴风鍚屾椂浣跨敤鍚屼竴涓猙yte[]锛岃鐗瑰埆娉ㄦ剰
                 UInt16 SendPacketId = tcpOutPacket.PacketCmdID;
                 Array.Copy(BitConverter.GetBytes(SendPacketId), 0, tcpOutPacket.GetPacketBytes(), 4, 2);
             }
 
-#if true //原来的直接发送，改为异步线程发送，减少锁定
+#if true //鍘熸潵鐨勭洿鎺ュ彂閫侊紝鏀逛负寮傛绾跨▼鍙戦�侊紝鍑忓皯閿佸畾
 
             bool bRet = false;
             if (null != s)
             {
-                // 只有连接状态才发送消息 ChenXiaojun
+                // 鍙湁杩炴帴鐘舵�佹墠鍙戦�佹秷鎭� ChenXiaojun
                 if ((s as TMSKSocket).Connected)
                 {
-                    //缓冲数据包
+                    //缂撳啿鏁版嵁鍖�
                     if (GameManager.FlagSkipSendDataCall)
                     {
                         bRet = true;
@@ -494,7 +494,7 @@ namespace Server.TCP
                 }
             }
 
-            //还回tcpoutpacket
+            //杩樺洖tcpoutpacket
             if (pushBack)
             {
                 Global._TCPManager.TcpOutPacketPool.Push(tcpOutPacket);
@@ -503,7 +503,7 @@ namespace Server.TCP
             return bRet;
 #else
 
-            //将发送的指令送到异步队列
+            //灏嗗彂閫佺殑鎸囦护閫佸埌寮傛闃熷垪
             SendPacketManager.getInstance().addSendPacketWrapper(new SendPacketWrapper()
                 {
                     socket = s,
@@ -515,7 +515,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 向客户端发送数据
+        /// 鍚戝鎴风鍙戦�佹暟鎹�
         /// </summary>
         /// <param name="data"></param>
         public bool SendData(TMSKSocket s, Byte[] buffer, int offset, int count, MemoryBlock item)
@@ -524,11 +524,11 @@ namespace Server.TCP
             SocketAsyncEventArgs writeEventArgs;
             if (GameManager.FlagOptimizeThreadPool3)
             {
-                writeEventArgs = s.PopWriteSocketAsyncEventArgs(); //线程安全的操作
+                writeEventArgs = s.PopWriteSocketAsyncEventArgs(); //绾跨▼瀹夊叏鐨勬搷浣�
             }
             else
             {
-                writeEventArgs = this.writePool.Pop(); //线程安全的操作
+                writeEventArgs = this.writePool.Pop(); //绾跨▼瀹夊叏鐨勬搷浣�
             }
             if (null == writeEventArgs)
             {
@@ -557,19 +557,19 @@ namespace Server.TCP
                 }
             }
 
-            if (exception) //此处不处理会导致内存泄露
+            if (exception) //姝ゅ涓嶅鐞嗕細瀵艰嚧鍐呭瓨娉勯湶
             {
-                /// 发送数据通知函数
+                /// 鍙戦�佹暟鎹�氱煡鍑芥暟
                 if (null != SocketSended)
                 {
                     SocketSended(this, writeEventArgs);
                 }
 
-                //什么事情都不做, 收回使用的e和buffer
+                //浠�涔堜簨鎯呴兘涓嶅仛, 鏀跺洖浣跨敤鐨別鍜宐uffer
                 // Free the SocketAsyncEventArg so they can be reused by another client.
-                writeEventArgs.SetBuffer(null, 0, 0); //回收内存
-                userToken.CurrentSocket = null; //释放
-                userToken.Tag = null; //释放
+                writeEventArgs.SetBuffer(null, 0, 0); //鍥炴敹鍐呭瓨
+                userToken.CurrentSocket = null; //閲婃斁
+                userToken.Tag = null; //閲婃斁
                 if (GameManager.FlagOptimizeThreadPool3)
                 {
                     //TMSKThreadStaticClass.GetInstance().PushSocketAsyncEventArgs(writeEventArgs);
@@ -585,7 +585,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 向客户端发送数据
+        /// 鍚戝鎴风鍙戦�佹暟鎹�
         /// </summary>
         /// <param name="data"></param>
         public bool SendData(TMSKSocket s, Byte[] buffer, int offset, int count, MemoryBlock item, SendBuffer sendBuffer)
@@ -594,11 +594,11 @@ namespace Server.TCP
             SocketAsyncEventArgs writeEventArgs;
             if (GameManager.FlagOptimizeThreadPool3)
             {
-                writeEventArgs = s.PopWriteSocketAsyncEventArgs(); //线程安全的操作
+                writeEventArgs = s.PopWriteSocketAsyncEventArgs(); //绾跨▼瀹夊叏鐨勬搷浣�
             }
             else
             {
-                writeEventArgs = this.writePool.Pop(); //线程安全的操作
+                writeEventArgs = this.writePool.Pop(); //绾跨▼瀹夊叏鐨勬搷浣�
             }
             if (null == writeEventArgs)
             {
@@ -628,19 +628,19 @@ namespace Server.TCP
                 }
             }
 
-            if (exception) //此处不处理会导致内存泄露
+            if (exception) //姝ゅ涓嶅鐞嗕細瀵艰嚧鍐呭瓨娉勯湶
             {
-                /// 发送数据通知函数
+                /// 鍙戦�佹暟鎹�氱煡鍑芥暟
                 if (null != SocketSended)
                 {
                     SocketSended(this, writeEventArgs);
                 }
 
-                //什么事情都不做, 收回使用的e和buffer
+                //浠�涔堜簨鎯呴兘涓嶅仛, 鏀跺洖浣跨敤鐨別鍜宐uffer
                 // Free the SocketAsyncEventArg so they can be reused by another client.
-                writeEventArgs.SetBuffer(null, 0, 0); //回收内存
-                userToken.CurrentSocket = null; //释放
-                userToken.Tag = null; //释放
+                writeEventArgs.SetBuffer(null, 0, 0); //鍥炴敹鍐呭瓨
+                userToken.CurrentSocket = null; //閲婃斁
+                userToken.Tag = null; //閲婃斁
                 if (GameManager.FlagOptimizeThreadPool3)
                 {
                     s.PushWriteSocketAsyncEventArgs(writeEventArgs);
@@ -663,7 +663,7 @@ namespace Server.TCP
             //Socket s = e.AcceptSocket;
             TMSKSocket s = new TMSKSocket(e.AcceptSocket);
 
-            //检查IP名单
+            //妫�鏌P鍚嶅崟
             bool disableConnect = false;
             bool? inIpWriteList = null;
             if (EnabledIPListFilter)
@@ -690,18 +690,18 @@ namespace Server.TCP
                 }
             }
 
-            //是否不再接受新的用户
+            //鏄惁涓嶅啀鎺ュ彈鏂扮殑鐢ㄦ埛
             if (DontAccept || disableConnect)
             {
                 try
                 {
                     if (disableConnect)
                     {
-                        //LogManager.WriteLog(LogTypes.Error, string.Format("New connection: {0}, but IP address was banned，Force close: {1}", s.RemoteEndPoint, ConnectedSocketsCount));
+                        //LogManager.WriteLog(LogTypes.Error, string.Format("New connection: {0}, but IP address was banned锛孎orce close: {1}", s.RemoteEndPoint, ConnectedSocketsCount));
                     }
                     else if(DontAccept)
                     {
-                        //LogManager.WriteLog(LogTypes.Error, string.Format("New connection: {0}, but server don't accept，Force close: {1}", s.RemoteEndPoint, ConnectedSocketsCount));
+                        //LogManager.WriteLog(LogTypes.Error, string.Format("New connection: {0}, but server don't accept锛孎orce close: {1}", s.RemoteEndPoint, ConnectedSocketsCount));
                     }
                 }
                 catch (Exception)
@@ -734,12 +734,29 @@ namespace Server.TCP
             BitConverter.GetBytes((uint)1).CopyTo(inOptionValues, 0);
             BitConverter.GetBytes((uint)120000).CopyTo(inOptionValues, sizeof(uint));
             BitConverter.GetBytes((uint)5000).CopyTo(inOptionValues, sizeof(uint) * 2);
-            (s as TMSKSocket).IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
+            if (OperatingSystem.IsWindows())
+            {
+                try
+                {
+                    (s as TMSKSocket).IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
+                }
+                catch { }
+            }
+            else
+            {
+                try
+                {
+                    (s as TMSKSocket).SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.KeepAlive, true);
+                    (s as TMSKSocket).SetSocketOption(System.Net.Sockets.SocketOptionLevel.Tcp, System.Net.Sockets.SocketOptionName.TcpKeepAliveTime, 120);
+                    (s as TMSKSocket).SetSocketOption(System.Net.Sockets.SocketOptionLevel.Tcp, System.Net.Sockets.SocketOptionName.TcpKeepAliveInterval, 5);
+                }
+                catch { }
+            }
 
             SocketAsyncEventArgs readEventArgs = null;
             if (GameManager.FlagOptimizeThreadPool3)
             {
-                readEventArgs = s.PopReadSocketAsyncEventArgs(); //线程安全的操作
+                readEventArgs = s.PopReadSocketAsyncEventArgs(); //绾跨▼瀹夊叏鐨勬搷浣�
             }
             else
             {
@@ -749,7 +766,7 @@ namespace Server.TCP
             {
                 try
                 {
-                    LogManager.WriteLog(LogTypes.Error, string.Format("New connect: {0}, but pool has already full，force close: {1}", s.RemoteEndPoint, ConnectedSocketsCount));
+                    LogManager.WriteLog(LogTypes.Error, string.Format("New connect: {0}, but pool has already full锛宖orce close: {1}", s.RemoteEndPoint, ConnectedSocketsCount));
                 }
                 catch (Exception)
                 {
@@ -777,7 +794,7 @@ namespace Server.TCP
                 return;
             }
 
-            //增加计数器
+            //澧炲姞璁℃暟鍣�
             //Interlocked.Increment(ref this.numConnectedSockets);
 
             // Get the socket for the accepted client connection and put it into the 
@@ -796,7 +813,7 @@ namespace Server.TCP
            // {
            // }
 
-            /// 连接成功通知函数
+            /// 杩炴帴鎴愬姛閫氱煡鍑芥暟
             if (null != SocketConnected)
             {
                 SocketConnected(this, readEventArgs);
@@ -835,13 +852,13 @@ namespace Server.TCP
 
                 // Get the message received from the listener.
                 //e.Buffer, e.Offset, e.bytesTransferred);
-                //通知外部有新的socket到达
+                //閫氱煡澶栭儴鏈夋柊鐨剆ocket鍒拌揪
                 if (null != SocketReceived)
                 {
-                    //字节排序
+                    //瀛楄妭鎺掑簭
                     if (GameManager.FlagUseWin32Decrypt)
                     {
-                        //使用动态库解密
+                        //浣跨敤鍔ㄦ�佸簱瑙ｅ瘑
                         int length = e.BytesTransferred;
                         unsafe
                         {
@@ -863,7 +880,7 @@ namespace Server.TCP
                     }
                     catch (System.Exception ex)
                     {
-                        //所有异常应当在下层捕获，不应抛到这层来
+                        //鎵�鏈夊紓甯稿簲褰撳湪涓嬪眰鎹曡幏锛屼笉搴旀姏鍒拌繖灞傛潵
                         LogManager.WriteException(ex.ToString());
                         recvReturn = false;
                     }
@@ -871,7 +888,7 @@ namespace Server.TCP
 
                 if (recvReturn)
                 {
-                    //继续接收流程(以数据流为驱动)
+                    //缁х画鎺ユ敹娴佺▼(浠ユ暟鎹祦涓洪┍鍔�)
                     Boolean willRaiseEvent = _ReceiveAsync(e);
                     if (!willRaiseEvent)
                     {
@@ -900,7 +917,7 @@ namespace Server.TCP
         /// <param name="e">SocketAsyncEventArg associated with the completed send operation.</param>
         private void ProcessSend(SocketAsyncEventArgs e)
         {
-             /// 发送数据通知函数
+             /// 鍙戦�佹暟鎹�氱煡鍑芥暟
             if (null != SocketSended)
             {
                 SocketSended(this, e);
@@ -915,12 +932,12 @@ namespace Server.TCP
                 //this.CloseClientSocket(e);
             }
 
-            //什么事情都不做, 收回使用的e和buffer
+            //浠�涔堜簨鎯呴兘涓嶅仛, 鏀跺洖浣跨敤鐨別鍜宐uffer
             // Free the SocketAsyncEventArg so they can be reused by another client.
-            e.SetBuffer(null, 0, 0); //回收内存
+            e.SetBuffer(null, 0, 0); //鍥炴敹鍐呭瓨
             TMSKSocket s = (e.UserToken as AsyncUserToken).CurrentSocket;
-            (e.UserToken as AsyncUserToken).CurrentSocket = null; //释放
-            (e.UserToken as AsyncUserToken).Tag = null; //释放
+            (e.UserToken as AsyncUserToken).CurrentSocket = null; //閲婃斁
+            (e.UserToken as AsyncUserToken).Tag = null; //閲婃斁
             if (GameManager.FlagOptimizeThreadPool3)
             {
                 if(null != s) s.PushWriteSocketAsyncEventArgs(e);
@@ -937,7 +954,7 @@ namespace Server.TCP
         /// <param name="localEndPoint">The endpoint which the server will listening for connection requests on.</param>
         internal void Start(string ip, int port)
         {
-            if ("" == ip) ip = "0.0.0.0"; //防止IP无效
+            if ("" == ip) ip = "0.0.0.0"; //闃叉IP鏃犳晥
 
             // Get endpoint for the listener.
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -956,7 +973,7 @@ namespace Server.TCP
         }
         
         /// <summary>
-        /// 关闭侦听的TMSKSocket
+        /// 鍏抽棴渚﹀惉鐨凾MSKSocket
         /// </summary>
         public void Stop()
         {
@@ -966,17 +983,17 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 关闭指定的TMSKSocket连接
+        /// 鍏抽棴鎸囧畾鐨凾MSKSocket杩炴帴
         /// </summary>
         /// <param name="s"></param>
-        /// <param name="reason">强制关闭的原因</param>
+        /// <param name="reason">寮哄埗鍏抽棴鐨勫師鍥�</param>
         public bool CloseSocket(TMSKSocket s, string reason = "")
         {
             //try
             //{               
             //    s.Shutdown(SocketShutdown.Both);
 
-            //    // 需要Close 不然不会收到套接字关闭 ChenXiaojun
+            //    // 闇�瑕丆lose 涓嶇劧涓嶄細鏀跺埌濂楁帴瀛楀叧闂� ChenXiaojun
             //    s.Close();
             //}
             //catch (Exception ex)
@@ -984,16 +1001,16 @@ namespace Server.TCP
             //    // Throws if client process has already closed.
             //    try
             //    {
-            //        LogManager.WriteLog(LogTypes.Info, string.Format("CloseSocket 异常: {0}, {1}", s.RemoteEndPoint, ex.Message));
+            //        LogManager.WriteLog(LogTypes.Info, string.Format("CloseSocket 寮傚父: {0}, {1}", s.RemoteEndPoint, ex.Message));
             //    }
             //    catch (Exception)
             //    {
             //    }
             //}
 
-            if (!FindSocket(s)) //已经关闭了
+            if (!FindSocket(s)) //宸茬粡鍏抽棴浜�
             {
-                //已经关闭之后再调用一次
+                //宸茬粡鍏抽棴涔嬪悗鍐嶈皟鐢ㄤ竴娆�
                 Global._SendBufferManager.Remove(s);
                 return false;
             }
@@ -1004,13 +1021,13 @@ namespace Server.TCP
             }
             RemoveSocket(s);
 
-            /// 断开成功通知函数
+            /// 鏂紑鎴愬姛閫氱煡鍑芥暟
             if (null != SocketClosed)
             {
                 SocketClosed(this, s);
             }
 
-            //在这个位置调用，避免遗漏,重复调用不会出错
+            //鍦ㄨ繖涓綅缃皟鐢紝閬垮厤閬楁紡,閲嶅璋冪敤涓嶄細鍑洪敊
             Global._SendBufferManager.Remove(s);
 
             try
@@ -1045,7 +1062,7 @@ namespace Server.TCP
                 }
             }
 
-            //由接收事件去释放处理
+            //鐢辨帴鏀朵簨浠跺幓閲婃斁澶勭悊
             return true;
         }
 
@@ -1067,7 +1084,7 @@ namespace Server.TCP
                 acceptEventArg.AcceptSocket = null;
             }
 
-            //this.semaphoreAcceptedClients.WaitOne(); //控制总的连接数
+            //this.semaphoreAcceptedClients.WaitOne(); //鎺у埗鎬荤殑杩炴帴鏁�
             Boolean willRaiseEvent = this.listenSocket.AcceptAsync(acceptEventArg);
             if (!willRaiseEvent)
             {
@@ -1076,7 +1093,7 @@ namespace Server.TCP
         }
 
         /// <summary>
-        /// 初始化IP白名单列表
+        /// 鍒濆鍖朓P鐧藉悕鍗曞垪琛�
         /// </summary>
         /// <param name="ipList"></param>
         public List<string> InitIPWhiteList(string[] ipList, bool enabeld = true)

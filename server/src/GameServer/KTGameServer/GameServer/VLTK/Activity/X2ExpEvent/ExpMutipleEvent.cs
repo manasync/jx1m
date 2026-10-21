@@ -145,24 +145,8 @@ namespace GameServer.VLTK.Core.Activity.X2ExpEvent
         }
         public static void UpdateServerStatus()
         {
-            UpdateServerModel _UpdateModel = new UpdateServerModel();
-            // Server này là server nào
-            _UpdateModel.SeverID = GameManager.ServerLineID;
-            _UpdateModel.Status = GetServerStatus();
-            _UpdateModel.NotifyUpdate = GetStatus();
-
-            byte[] SendDATA = DataHelper.ObjectToBytes<UpdateServerModel>(_UpdateModel);
-
-            WebClient wwc = new WebClient();
-
-            try
-            {
-                byte[] VL = wwc.UploadData("http://207.148.73.199:88/UpdateServerStatus.aspx", SendDATA);
-            }
-            catch (Exception ex)
-            {
-                LogManager.WriteLog(LogTypes.Error, "Update server Status Bug :" + ex.ToString());
-            }
+            // Phone-home removed: đã gỡ UploadData báo tình trạng server về IP chủ cũ (207.148.73.199:88).
+            // Muốn bật lại cho hạ tầng của bạn: dựng endpoint riêng rồi wwc.UploadData tới đó.
         }
 
         public static bool IsOpen()
