@@ -42,7 +42,7 @@ namespace FS.VLTK.Factory.Animation
             /// Tên động tác
             string actionName = string.Format("{0}_{1}", this.GetActionName(actionType, weaponID, true), (int) dir);
             /// Đường dẫn AssetBundle chứa động tác
-            string bundleDir = string.Format("{0}/{1}.unity3d", actionSetXML.Rider[resID].BundleDir, actionName);
+            string bundleDir = this.GetHorseBundleDir(resID, actionName);
 
             /// Trả về kết quả
             return KTResourceManager.Instance.GetSubAssets(bundleDir, actionName);
@@ -78,7 +78,7 @@ namespace FS.VLTK.Factory.Animation
             /// Tên động tác
             string actionName = string.Format("{0}_{1}", this.GetActionName(actionType, weaponID, true), (int) dir);
             /// Đường dẫn AssetBundle chứa động tác
-            string bundleDir = string.Format("{0}/{1}.unity3d", actionSetXML.Rider[resID].BundleDir, actionName);
+            string bundleDir = this.GetHorseBundleDir(resID, actionName);
 
             /// Nếu Bundle chưa được tải xuống
             if (!KTResourceManager.Instance.HasBundle(bundleDir))
@@ -148,10 +148,20 @@ namespace FS.VLTK.Factory.Animation
             /// Tên động tác
             string actionName = string.Format("{0}_{1}", this.GetActionName(actionType, weaponID, true), (int) dir);
             /// Đường dẫn AssetBundle chứa động tác
-            string bundleDir = string.Format("{0}/{1}.unity3d", actionSetXML.Rider[resID].BundleDir, actionName);
+            string bundleDir = this.GetHorseBundleDir(resID, actionName);
 
             /// Giải phóng AssetBundle
             KTResourceManager.Instance.ReleaseBundle(bundleDir);
         }
-    }
+    
+        private string GetHorseBundleDir(string resID, string actionName)
+        {
+            CharacterActionSetXML actionSetXML = Loader.Loader.CharacterActionSetXML;
+            if (actionSetXML != null && actionSetXML.Rider != null && actionSetXML.Rider.TryGetValue(resID, out var comp) && !string.IsNullOrEmpty(comp.BundleDir))
+            {
+                return string.Format("{0}/{1}.unity3d", comp.BundleDir, actionName);
+            }
+            return string.Format("Resources/Character/Horse/{0}/{1}.unity3d", resID, actionName);
+        }
+}
 }

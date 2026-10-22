@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using FS.VLTK.Factory;
 using FS.VLTK.Loader;
 using System;
@@ -138,17 +138,17 @@ namespace FS.VLTK.Utilities.UnityUI
 
             string url = Global.WebPath(string.Format("Data/{0}", bundleDir));
 #if UNITY_IOS || UNITY_EDITOR
-            if (url.Contains("file:///"))
-			{
-                url = url.Replace("file:///", "");
-			}
+            url = PathUtils.NormalizeLocalPath(url);
 #endif
 
 
+            if (!File.Exists(url))
+            {
+                return;
+            }
             AssetBundle bundle = AssetBundle.LoadFromFile(url);
             if (bundle == null)
             {
-                KTDebug.LogError("UIAssetBundle not found -> " + url);
                 return;
             }
 
@@ -158,11 +158,14 @@ namespace FS.VLTK.Utilities.UnityUI
 			{
                 string atlasName = Path.GetFileNameWithoutExtension(assetName);
                 Sprite[] subAssets = bundle.LoadAssetWithSubAssets<UnityEngine.Sprite>(atlasName);
-                foreach (Sprite sprite in subAssets)
-				{
-                    string spriteName = string.Format("{0}_{1}", atlasName, sprite.name);
-                    loadedAssets[spriteName] = sprite;
-				}
+                if (subAssets != null)
+                {
+                    foreach (Sprite sprite in subAssets)
+                    {
+                        string spriteName = string.Format("{0}_{1}", atlasName.ToLower(), sprite.name);
+                        loadedAssets[spriteName] = sprite;
+                    }
+                }
             }
 
             /// Giải phóng Bundle
@@ -197,7 +200,6 @@ namespace FS.VLTK.Utilities.UnityUI
             /// Nếu không tìm thấy Bundle
             if (!this.listBundles.TryGetValue(bundleDir, out SpriteBundle bundle))
             {
-                KTDebug.LogError("UIAssetBundle not found -> " + bundleDir);
                 return null;
             }
 
@@ -228,7 +230,6 @@ namespace FS.VLTK.Utilities.UnityUI
 
             if (!this.listBundles.ContainsKey(bundleDir))
             {
-                KTDebug.LogError("UIAssetBundle not found -> " + bundleDir);
                 return;
             }
             this.listBundles[bundleDir].ReferenceCount--;

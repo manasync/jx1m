@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -102,9 +102,19 @@ namespace FS.VLTK.Entities.Config
 			/// <returns></returns>
 			public static World Parse(XElement xmlNode)
 			{
+				if (xmlNode == null)
+				{
+					return new World()
+					{
+						ImageFileName = "",
+						Areas = new List<Area>(),
+						Places = new List<Place>(),
+					};
+				}
+
 				World world = new World()
 				{
-					ImageFileName = xmlNode.Attribute("ImageFileName").Value,
+					ImageFileName = xmlNode.Attribute("ImageFileName") != null ? xmlNode.Attribute("ImageFileName").Value : "",
 					Areas = new List<Area>(),
 					Places = new List<Place>(),
 				};
@@ -278,9 +288,18 @@ namespace FS.VLTK.Entities.Config
 		/// <returns></returns>
 		public static WorldMapXML Parse(XElement xmlNode)
 		{
+			if (xmlNode == null)
+			{
+				return new WorldMapXML()
+				{
+					WorldMap = new World() { ImageFileName = "", Areas = new List<World.Area>(), Places = new List<Place>() },
+					Areas = new List<Area>(),
+				};
+			}
+
 			WorldMapXML worldMap = new WorldMapXML()
 			{
-				WorldMap = World.Parse(xmlNode.Element("World")),
+				WorldMap = xmlNode.Element("World") != null ? World.Parse(xmlNode.Element("World")) : new World() { ImageFileName = "", Areas = new List<World.Area>(), Places = new List<Place>() },
 				Areas = new List<Area>(),
 			};
 

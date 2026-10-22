@@ -129,7 +129,7 @@ namespace FS.GameEngine.Logic
         /// </summary>
         public static void CopyRoleData(RoleData roleDataMini)
         {
-            KTDebug.LogError("CopyRoleData");
+            KTDebug.Log("CopyRoleData");
             RoleDataBackUp = roleDataMini;
         }
 

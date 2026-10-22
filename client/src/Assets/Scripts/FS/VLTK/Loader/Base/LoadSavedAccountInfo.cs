@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using FS.VLTK.Utilities;
 using System;
 using System.Collections;
@@ -58,29 +58,46 @@ namespace FS.VLTK.Loader
 		/// <returns></returns>
 		public IEnumerator ReadData()
 		{
-			/// Đường dẫn
-			string fullPath = Global.WebPath(LoadSavedAccountInfo.AccountInfoFile);
+			string persistentPath = PathUtils.GetPersistentPath(LoadSavedAccountInfo.AccountInfoFile);
+			byte[] byteData = null;
 
-			/// Nội dung File
-			UnityWebRequest request = new UnityWebRequest(fullPath);
-			request.downloadHandler = new DownloadHandlerBuffer();
-			/// Gửi yêu cầu
-			yield return request.SendWebRequest();
-
-			/// Nếu có lỗi gì đó
-			if (!string.IsNullOrEmpty(request.error))
+			if (File.Exists(persistentPath))
 			{
-				this.Faild?.Invoke(request.error);
+				try
+				{
+					byteData = File.ReadAllBytes(persistentPath);
+				}
+				catch (Exception ex)
+				{
+					this.Faild?.Invoke(ex.ToString());
+					yield break;
+				}
+			}
+			else
+			{
+				string fullPath = Global.WebPath(LoadSavedAccountInfo.AccountInfoFile);
+				using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
+				{
+					yield return request.SendWebRequest();
+
+					if (!string.IsNullOrEmpty(request.error))
+					{
+						this.Faild?.Invoke(request.error);
+						yield break;
+					}
+
+					byteData = request.downloadHandler.data;
+				}
+			}
+
+			if (byteData == null || byteData.Length == 0)
+			{
+				this.Faild?.Invoke("Data is empty");
 				yield break;
 			}
 
 			try
 			{
-				/// Chuỗi Byte kết quả
-				byte[] byteData = request.downloadHandler.data;
-				/// Xóa yêu càu
-				request.downloadHandler.Dispose();
-				request.Dispose();
 				/// Xóa File
 				this.DeleteData();
 

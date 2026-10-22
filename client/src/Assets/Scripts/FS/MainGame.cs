@@ -1,4 +1,4 @@
-﻿#define ENABLE_AUTO_UPDATE
+#define ENABLE_AUTO_UPDATE
 #define TEST
 //#define ENABLE_DEBUG_LOG
 using FS.GameEngine.Data;
@@ -401,9 +401,14 @@ public class MainGame : TTMonoBehaviour
     /// <param name="error"></param>
     private void ReadVersionFaild(string error)
     {
-        Super.ShowMessageBox("Lỗi nghiêm trọng", "Không tìm thấy File quy định phiên bản trò chơi, hãy gỡ và thử cài đặt lại. Nếu vẫn không được, xin hãy liên hệ với hỗ trợ để được trợ giúp!", () =>
+        KTDebug.LogError("ReadVersionFaild: " + error);
+        Super.ShowMessageBox("Lỗi nghiêm trọng", "Không tìm thấy File quy định phiên bản trò chơi (" + error + "). Hãy gỡ và thử cài đặt lại.", () =>
         {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
+#endif
         });
     }
     #endregion

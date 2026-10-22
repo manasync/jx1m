@@ -42,9 +42,9 @@ namespace MySQLDriverCS
                 CharacterSet = "utf8mb4",
                 AllowUserVariables = true,
                 DefaultCommandTimeout = 30,
-                Pooling = true,
-                MinimumPoolSize = 5,
-                MaximumPoolSize = 100
+                ConnectionTimeout = 10,
+                Keepalive = 30,
+                Pooling = false
             };
             AsString = builder.ConnectionString;
         }

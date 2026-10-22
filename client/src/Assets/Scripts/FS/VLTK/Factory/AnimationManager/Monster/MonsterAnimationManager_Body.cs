@@ -57,7 +57,7 @@ namespace FS.VLTK.Factory.Animation
             }
 
             /// File AssetBundle tương ứng
-            string bundleDir = string.Format("{0}/{1}.unity3d", actionSetXML.Monsters[resID].BundleDir, actionName);
+            string bundleDir = this.GetMonsterBundleDir(resID, actionName);
 
             /// Trả về kết quả
             return KTResourceManager.Instance.GetSubAssets(bundleDir, actionName);
@@ -107,7 +107,7 @@ namespace FS.VLTK.Factory.Animation
             }
 
             /// File AssetBundle tương ứng
-            string bundleDir = string.Format("{0}/{1}.unity3d", actionSetXML.Monsters[resID].BundleDir, actionName);
+            string bundleDir = this.GetMonsterBundleDir(resID, actionName);
 
             /// Nếu Bundle chưa được tải xuống
             if (!KTResourceManager.Instance.HasBundle(bundleDir))
@@ -196,10 +196,20 @@ namespace FS.VLTK.Factory.Animation
             }
 
             /// File AssetBundle tương ứng
-            string bundleDir = string.Format("{0}/{1}.unity3d", actionSetXML.Monsters[resID].BundleDir, actionName);
+            string bundleDir = this.GetMonsterBundleDir(resID, actionName);
 
             /// Giải phóng AssetBundle
             KTResourceManager.Instance.ReleaseBundle(bundleDir);
         }
-    }
+    
+        private string GetMonsterBundleDir(string resID, string actionName)
+        {
+            MonsterActionSetXML actionSetXML = Loader.Loader.MonsterActionSetXML;
+            if (actionSetXML != null && actionSetXML.Monsters != null && actionSetXML.Monsters.TryGetValue(resID, out var comp) && !string.IsNullOrEmpty(comp.BundleDir))
+            {
+                return string.Format("{0}/{1}.unity3d", comp.BundleDir, actionName);
+            }
+            return string.Format("Resources/NPC/{0}/{1}.unity3d", resID, actionName);
+        }
+}
 }

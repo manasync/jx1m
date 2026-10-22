@@ -30,7 +30,7 @@ namespace FS.VLTK.Factory.Animation
             /// Tên động tác
             string actionName = string.Format("{0}_{1}", this.GetActionName(actionType, resID, isRiding), (int) dir);
             /// Đường dẫn AssetBundle chứa động tác
-            string bundleDir = string.Format("{0}/{1}.unity3d", (sex == Sex.FEMALE ? actionSetXML.FemaleWeapon[resID].BundleDir : actionSetXML.MaleWeapon[resID].BundleDir), actionName);
+            string bundleDir = this.GetWeaponBundleDir(resID, sex, actionName);
 
             /// Trả về kết quả
             return KTResourceManager.Instance.GetSubAssets(bundleDir, actionName);
@@ -55,7 +55,7 @@ namespace FS.VLTK.Factory.Animation
             /// Tên động tác
             string actionName = string.Format("{0}_{1}", this.GetActionName(actionType, resID, isRiding), (int) dir);
             /// Đường dẫn AssetBundle chứa động tác
-            string bundleDir = string.Format("{0}/{1}.unity3d", (sex == Sex.FEMALE ? actionSetXML.FemaleWeapon[resID].BundleDir : actionSetXML.MaleWeapon[resID].BundleDir), actionName);
+            string bundleDir = this.GetWeaponBundleDir(resID, sex, actionName);
 
             /// Nếu Bundle chưa được tải xuống
             if (!KTResourceManager.Instance.HasBundle(bundleDir))
@@ -121,10 +121,25 @@ namespace FS.VLTK.Factory.Animation
             /// Tên động tác
             string actionName = string.Format("{0}_{1}", this.GetActionName(actionType, resID, isRiding), (int) dir);
             /// Đường dẫn AssetBundle chứa động tác
-            string bundleDir = string.Format("{0}/{1}.unity3d", (sex == Sex.FEMALE ? actionSetXML.FemaleWeapon[resID].BundleDir : actionSetXML.MaleWeapon[resID].BundleDir), actionName);
+            string bundleDir = this.GetWeaponBundleDir(resID, sex, actionName);
 
             /// Giải phóng AssetBundle
             KTResourceManager.Instance.ReleaseBundle(bundleDir);
         }
-    }
+    
+        private string GetWeaponBundleDir(string resID, Sex sex, string actionName)
+        {
+            CharacterActionSetXML actionSetXML = Loader.Loader.CharacterActionSetXML;
+            if (actionSetXML != null)
+            {
+                var dict = (sex == Sex.FEMALE ? actionSetXML.FemaleWeapon : actionSetXML.MaleWeapon);
+                if (dict != null && dict.TryGetValue(resID, out var comp) && !string.IsNullOrEmpty(comp.BundleDir))
+                {
+                    return string.Format("{0}/{1}.unity3d", comp.BundleDir, actionName);
+                }
+            }
+            string folder = (sex == Sex.FEMALE ? "Woman" : "Man");
+            return string.Format("Resources/Character/{0}/Weapon/{1}/{2}.unity3d", folder, resID, actionName);
+        }
+}
 }

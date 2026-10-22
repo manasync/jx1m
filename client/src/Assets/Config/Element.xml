@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements BundleDir="UI/Series/Series.unity3d" AtlasName="Series">
+  <Element ID="1" Name="Kim" SmallImage="min_kim" NormalImage="small_kim" BigImage="max_kim" />
+  <Element ID="2" Name="Mộc" SmallImage="min_moc" NormalImage="small_moc" BigImage="max_moc" />
+  <Element ID="3" Name="Thổ" SmallImage="min_tho" NormalImage="small_tho" BigImage="max_tho" />
+  <Element ID="4" Name="Thủy" SmallImage="min_thuy" NormalImage="small_thuy" BigImage="max_thuy" />
+  <Element ID="5" Name="Hỏa" SmallImage="min_hoa" NormalImage="small_hoa" BigImage="max_hoa" />
+</Elements>

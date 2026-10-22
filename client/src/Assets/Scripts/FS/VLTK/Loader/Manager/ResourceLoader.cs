@@ -26,8 +26,13 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static AssetBundle LoadAssetBundle(string path)
         {
+            string localPath = PathUtils.NormalizeLocalPath(path);
+            if (!File.Exists(localPath))
+            {
+                return null;
+            }
             /// Yêu cầu tương ứng
-            AssetBundle bundle = AssetBundle.LoadFromFile(path);
+            AssetBundle bundle = AssetBundle.LoadFromFile(localPath);
             /// Trả về kết quả
             return bundle;
         }
@@ -40,26 +45,40 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static AssetBundle LoadAssetBundle(string path, bool isEncrypted)
         {
-            /// Yêu cầu tương ứng
-            UnityWebRequest request = UnityWebRequest.Get(path);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SendWebRequest();
+            byte[] byteData = null;
+            string localPath = PathUtils.NormalizeLocalPath(path);
+            if (File.Exists(localPath))
+            {
+                byteData = File.ReadAllBytes(localPath);
+            }
+            else
+            {
+                /// Yêu cầu tương ứng
+                UnityWebRequest request = UnityWebRequest.Get(path);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SendWebRequest();
 
-            /// Đợi đến khi tải xong
-            while (!request.isDone) ;
+                /// Đợi đến khi tải xong
+                while (!request.isDone) ;
 
-            /// Nếu có lỗi gì đó
-            if (!string.IsNullOrEmpty(request.error))
+                /// Nếu có lỗi gì đó
+                if (!string.IsNullOrEmpty(request.error))
+                {
+                    return null;
+                }
+
+                /// Chuỗi Bytes tương ứng
+                byteData = request.downloadHandler.data;
+
+                /// Xóa yêu cầu
+                request.downloadHandler.Dispose();
+                request.Dispose();
+            }
+
+            if (byteData == null || byteData.Length == 0)
             {
                 return null;
             }
-
-            /// Chuỗi Bytes tương ứng
-            byte[] byteData = request.downloadHandler.data;
-
-            /// Xóa yêu cầu
-            request.downloadHandler.Dispose();
-            request.Dispose();
 
             /// Nếu mã hóa thì giải mã
             if (isEncrypted)
@@ -68,7 +87,7 @@ namespace FS.VLTK.Loader
                 {
                     byteData = KTResourceCrypto.Decrypt(byteData);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -139,6 +158,28 @@ namespace FS.VLTK.Loader
         }
 
         /// <summary>
+        /// Tìm file trên ổ đĩa từ tên bundle asset
+        /// </summary>
+        private static string FindLocalFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return null;
+
+            string rel = fileName.StartsWith("Assets/") ? fileName.Substring(7) : (fileName.StartsWith("Assets\\") ? fileName.Substring(7) : fileName);
+            string direct = Path.Combine(Application.dataPath, rel);
+            if (File.Exists(direct)) return direct;
+
+            string justFile = Path.GetFileName(fileName);
+            string configRoot = Path.Combine(Application.dataPath, "Config");
+            if (Directory.Exists(configRoot))
+            {
+                string[] files = Directory.GetFiles(configRoot, justFile, SearchOption.AllDirectories);
+                if (files.Length > 0) return files[0];
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Tải XML từ Bundle
         /// </summary>
         /// <param name="bundle"></param>
@@ -146,16 +187,33 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static XElement LoadXMLFromBundle(AssetBundle bundle, string fileName)
         {
-            if (!bundle.Contains(fileName))
+            if (bundle != null && bundle.Contains(fileName))
             {
-                KTDebug.LogError("AssetBundle do not contains item - " + fileName);
-                return null;
+                TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
+                if (textAsset != null)
+                {
+                    string text = textAsset.text;
+                    Resources.UnloadAsset(textAsset);
+                    GameObject.DestroyImmediate(textAsset, true);
+                    return XElement.Parse(text);
+                }
             }
-            TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
-            string text = textAsset.text;
-            Resources.UnloadAsset(textAsset);
-            GameObject.DestroyImmediate(textAsset, true);
-            return XElement.Parse(text);
+
+            string local = FindLocalFile(fileName);
+            if (local != null)
+            {
+                try
+                {
+                    return XElement.Load(local);
+                }
+                catch (Exception ex)
+                {
+                    KTDebug.LogError("Error loading XML from file " + local + ": " + ex.Message);
+                }
+            }
+
+            KTDebug.LogWarning("XML not found in bundle or disk: " + fileName);
+            return new XElement("Empty");
         }
 
         /// <summary>
@@ -166,16 +224,32 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static string LoadTextFileFromBundle(AssetBundle bundle, string fileName)
         {
-            if (!bundle.Contains(fileName))
+            if (bundle != null && bundle.Contains(fileName))
             {
-                KTDebug.LogError("AssetBundle do not contains item - " + fileName);
-                return null;
+                TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
+                if (textAsset != null)
+                {
+                    string text = textAsset.text;
+                    Resources.UnloadAsset(textAsset);
+                    GameObject.DestroyImmediate(textAsset, true);
+                    return text;
+                }
             }
-            TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
-            string text = textAsset.text;
-            Resources.UnloadAsset(textAsset);
-            GameObject.DestroyImmediate(textAsset, true);
-            return text;
+
+            string local = FindLocalFile(fileName);
+            if (local != null)
+            {
+                try
+                {
+                    return File.ReadAllText(local);
+                }
+                catch (Exception ex)
+                {
+                    KTDebug.LogError("Error loading text from file " + local + ": " + ex.Message);
+                }
+            }
+
+            return "";
         }
 
         /// <summary>
@@ -186,16 +260,32 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static byte[] LoadBytesFromBundle(AssetBundle bundle, string fileName)
         {
-            if (!bundle.Contains(fileName))
+            if (bundle != null && bundle.Contains(fileName))
             {
-                KTDebug.LogError("AssetBundle do not contains item - " + fileName);
-                return null;
+                TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
+                if (textAsset != null)
+                {
+                    byte[] bytes = textAsset.bytes;
+                    Resources.UnloadAsset(textAsset);
+                    GameObject.DestroyImmediate(textAsset, true);
+                    return bytes;
+                }
             }
-            TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
-            byte[] bytes = textAsset.bytes;
-            Resources.UnloadAsset(textAsset);
-            GameObject.DestroyImmediate(textAsset, true);
-            return bytes;
+
+            string local = FindLocalFile(fileName);
+            if (local != null)
+            {
+                try
+                {
+                    return File.ReadAllBytes(local);
+                }
+                catch (Exception ex)
+                {
+                    KTDebug.LogError("Error loading bytes from file " + local + ": " + ex.Message);
+                }
+            }
+
+            return new byte[0];
         }
 
         /// <summary>

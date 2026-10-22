@@ -49,6 +49,7 @@ namespace FS.VLTK.Loader
         /// <param name="bytes"></param>
         public static void LoadActionConfig(byte[] bytes)
         {
+            if (bytes == null || bytes.Length == 0) return;
             int i = 0;
 
             int normalActionSize = (int) bytes[i];
@@ -391,6 +392,7 @@ namespace FS.VLTK.Loader
         /// <param name="byteData"></param>
         public static void LoadCharacterActionSetSound(byte[] byteData)
         {
+            if (byteData == null || byteData.Length == 0) return;
             byte[] bytes = byteData;
 
             int i = 0;

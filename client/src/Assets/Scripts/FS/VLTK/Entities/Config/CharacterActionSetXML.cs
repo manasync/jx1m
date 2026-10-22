@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -128,130 +128,62 @@ namespace FS.VLTK.Entities.Config
         public static CharacterActionSetXML Parse(XElement xmlNode)
         {
             CharacterActionSetXML actionSet = new CharacterActionSetXML();
+            if (xmlNode == null) return actionSet;
+
+            System.Action<XElement, string, System.Collections.Generic.Dictionary<string, Component>, System.Collections.Generic.Dictionary<int, Component>> parsePart = (parent, partName, dictById, dictByCode) =>
+            {
+                if (parent == null) return;
+                XElement partNode = parent.Element(partName);
+                if (partNode == null) return;
+                foreach (XElement data in partNode.Elements("Set"))
+                {
+                    int code = int.Parse(data.Attribute("Code").Value);
+                    string id = data.Attribute("ID").Value;
+                    string bundleDir = data.Attribute("BundleDir").Value;
+                    Component comp = new Component()
+                    {
+                        Code = code,
+                        ID = id,
+                        BundleDir = bundleDir,
+                    };
+                    dictById[id] = comp;
+                    dictByCode[code] = comp;
+                }
+            };
 
             #region Male
-            foreach (XElement data in xmlNode.Element("Male").Element("Armor").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.MaleArmor[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.MaleArmorByCode[code] = actionSet.MaleArmor[id];
-            }
-            foreach (XElement data in xmlNode.Element("Male").Element("Head").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.MaleHead[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.MaleHeadByCode[code] = actionSet.MaleHead[id];
-            }
-            foreach (XElement data in xmlNode.Element("Male").Element("Mantle").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.MaleMantle[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.MaleMantleByCode[code] = actionSet.MaleMantle[id];
-            }
-            foreach (XElement data in xmlNode.Element("Male").Element("Weapon").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.MaleWeapon[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.MaleWeaponByCode[code] = actionSet.MaleWeapon[id];
-            }
+            XElement maleNode = xmlNode.Element("Male");
+            parsePart(maleNode, "Armor", actionSet.MaleArmor, actionSet.MaleArmorByCode);
+            parsePart(maleNode, "Head", actionSet.MaleHead, actionSet.MaleHeadByCode);
+            parsePart(maleNode, "Mantle", actionSet.MaleMantle, actionSet.MaleMantleByCode);
+            parsePart(maleNode, "Weapon", actionSet.MaleWeapon, actionSet.MaleWeaponByCode);
             #endregion
 
-            #region Male
-            foreach (XElement data in xmlNode.Element("Female").Element("Armor").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.FemaleArmor[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.FemaleArmorByCode[code] = actionSet.FemaleArmor[id];
-            }
-            foreach (XElement data in xmlNode.Element("Female").Element("Head").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.FemaleHead[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.FemaleHeadByCode[code] = actionSet.FemaleHead[id];
-            }
-            foreach (XElement data in xmlNode.Element("Female").Element("Mantle").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.FemaleMantle[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.FemaleMantleByCode[code] = actionSet.FemaleMantle[id];
-            }
-            foreach (XElement data in xmlNode.Element("Female").Element("Weapon").Elements("Set"))
-            {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.FemaleWeapon[id] = new Component()
-                {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.FemaleWeaponByCode[code] = actionSet.FemaleWeapon[id];
-            }
+            #region Female
+            XElement femaleNode = xmlNode.Element("Female");
+            parsePart(femaleNode, "Armor", actionSet.FemaleArmor, actionSet.FemaleArmorByCode);
+            parsePart(femaleNode, "Head", actionSet.FemaleHead, actionSet.FemaleHeadByCode);
+            parsePart(femaleNode, "Mantle", actionSet.FemaleMantle, actionSet.FemaleMantleByCode);
+            parsePart(femaleNode, "Weapon", actionSet.FemaleWeapon, actionSet.FemaleWeaponByCode);
             #endregion
 
             #region Rider
-            foreach (XElement data in xmlNode.Element("Rider").Elements("Set"))
+            XElement riderNode = xmlNode.Element("Rider");
+            if (riderNode != null)
             {
-                int code = int.Parse(data.Attribute("Code").Value);
-                string id = data.Attribute("ID").Value;
-                string bundleDir = data.Attribute("BundleDir").Value;
-                actionSet.Rider[id] = new Component()
+                foreach (XElement data in riderNode.Elements("Set"))
                 {
-                    Code = code,
-                    ID = id,
-                    BundleDir = bundleDir,
-                };
-                actionSet.RiderByCode[code] = actionSet.Rider[id];
+                    int code = int.Parse(data.Attribute("Code").Value);
+                    string id = data.Attribute("ID").Value;
+                    string bundleDir = data.Attribute("BundleDir").Value;
+                    actionSet.Rider[id] = new Component()
+                    {
+                        Code = code,
+                        ID = id,
+                        BundleDir = bundleDir,
+                    };
+                    actionSet.RiderByCode[code] = actionSet.Rider[id];
+                }
             }
             #endregion
 

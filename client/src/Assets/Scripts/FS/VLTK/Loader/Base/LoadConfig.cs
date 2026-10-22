@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using FS.GameFramework.Logic;
 using FS.VLTK.Entities.Object;
 using FS.VLTK.Factory;
@@ -79,7 +79,11 @@ namespace FS.VLTK.Loader
             /// Toác
             if (this.GameConfigAssetBundle == null)
             {
+#if !UNITY_EDITOR
                 Super.ShowMessageBox("Lỗi tải dữ liệu", "Không thể tải dữ liệu từ file Config.unity3d. Hãy kiểm tra!");
+#else
+                KTDebug.Log("Config.unity3d not found, falling back to local XML in Assets/Config");
+#endif
             }
             #endregion
 
@@ -89,186 +93,449 @@ namespace FS.VLTK.Loader
             #region Đọc dữ liệu từ các file XML bên trong
             this.OnProgressBarReport?.Invoke(1);
             yield return wait;
-            Loader.LoadPlayerPray(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIIVTY_PLAYERPRAY));
-
+            try
+            {
+                Loader.LoadPlayerPray(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIIVTY_PLAYERPRAY));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(2);
             yield return wait;
-            Loader.LoadColonyMaps(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_COLONYMAP_FILE));
-
+            try
+            {
+                Loader.LoadColonyMaps(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_COLONYMAP_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(3);
             yield return wait;
-            Loader.LoadCrossServerMap(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_CROSSSERVERMAP_FILE));
-
+            try
+            {
+                Loader.LoadCrossServerMap(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_CROSSSERVERMAP_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(4);
             yield return wait;
-            Loader.LoadWorldMap(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_WORLDMAP_FILE));
-
+            try
+            {
+                Loader.LoadWorldMap(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_WORLDMAP_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(5);
             yield return wait;
-            Loader.LoadMapConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MAP_FILE));
-
+            try
+            {
+                Loader.LoadMapConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MAP_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(6);
             yield return wait;
-            Loader.LoadAutoPaths(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_AUTOPATH_FILE));
-
+            try
+            {
+                Loader.LoadAutoPaths(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_AUTOPATH_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(10);
             yield return wait;
-            Loader.LoadMonsterActionSetXML(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MONSTERACTIONSET_FILE));
-
+            try
+            {
+                Loader.LoadMonsterActionSetXML(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MONSTERACTIONSET_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(12);
             yield return wait;
-            Loader.LoadMonsters(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MONSTER_FILE));
-
+            try
+            {
+                Loader.LoadMonsters(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MONSTER_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(15);
             yield return wait;
-            Loader.LoadPetConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_PETCONFIG_FILE));
-            Loader.LoadPets(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_PET_FILE));
-
+            try
+            {
+                Loader.LoadPetConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_PETCONFIG_FILE));
+                Loader.LoadPets(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_PET_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(16);
             yield return wait;
-            Loader.LoadNPCs(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_NPC_FILE));
-
+            try
+            {
+                Loader.LoadNPCs(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_NPC_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(18);
             yield return wait;
-            Loader.LoadRoleAvarta(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ROLEAVARTA_FILE));
-
+            try
+            {
+                Loader.LoadRoleAvarta(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ROLEAVARTA_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(19);
             yield return wait;
-            Loader.LoadGuildConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_GUILDCONFIG_FILE));
-
+            try
+            {
+                Loader.LoadGuildConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_GUILDCONFIG_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(20);
             yield return wait;
-            Loader.LoadEffects(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_EFFECT_FILE));
-
+            try
+            {
+                Loader.LoadEffects(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_EFFECT_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(23);
             yield return wait;
-            Loader.LoadFaction(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_FACTION_FILE));
-            Loader.LoadFactionIntro(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_FACTIONINTRO_FILE));
-
+            try
+            {
+                Loader.LoadFaction(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_FACTION_FILE));
+                Loader.LoadFactionIntro(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_FACTIONINTRO_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(24);
             yield return wait;
-            Loader.LoadWeaponEnhanceEffectConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_WEAPONENHANCEEFFECT_FILE));
-
+            try
+            {
+                Loader.LoadWeaponEnhanceEffectConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_WEAPONENHANCEEFFECT_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(25);
             yield return wait;
-            Loader.LoadPropertyDictionary(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_PROPERTYDICTIONARY_FILE));
-
+            try
+            {
+                Loader.LoadPropertyDictionary(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_PROPERTYDICTIONARY_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(30);
             yield return wait;
-            Loader.LoadSkillAttribute(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SKILLATTRIBUTE_FILE));
-
+            try
+            {
+                Loader.LoadSkillAttribute(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SKILLATTRIBUTE_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(31);
             yield return wait;
-            Loader.LoadEnchantSkill(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ENCHANTSKILL_FILE));
-
+            try
+            {
+                Loader.LoadEnchantSkill(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ENCHANTSKILL_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(32);
             yield return wait;
-            Loader.LoadAutoSkill(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_AUTOSKILL_FILE));
-
+            try
+            {
+                Loader.LoadAutoSkill(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_AUTOSKILL_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(33);
             yield return wait;
-            Loader.LoadSkillData(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SKILLDATA_FILE));
-
+            try
+            {
+                Loader.LoadSkillData(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SKILLDATA_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(35);
             yield return wait;
-            Loader.LoadElement(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ELEMENT_FILE));
-
+            try
+            {
+                Loader.LoadElement(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ELEMENT_FILE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(36);
             yield return wait;
-            Loader.LoadActivities(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIIVTY_LIST));
-
+            try
+            {
+                Loader.LoadActivities(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIIVTY_LIST));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(37);
             yield return wait;
-            Loader.LoadBulletActionSetSound(ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_BULLETACTIONSETSOUND));
-
+            try
+            {
+                Loader.LoadBulletActionSetSound(ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_BULLETACTIONSETSOUND));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(38);
             yield return wait;
-            Loader.LoadCharacterActionSetXML(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIONSET_CONFIG));
-
+            try
+            {
+                Loader.LoadCharacterActionSetXML(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIONSET_CONFIG));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(39);
             yield return wait;
-            Loader.LoadMantleTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MANTLE_TITLE));
-            Loader.LoadOfficeTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_OFFICE_TITLE));
-            Loader.LoadRoleTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ROLE_TITLE));
-            Loader.LoadSpecialTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SPECIAL_TITLE));
-
+            try
+            {
+                Loader.LoadMantleTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_MANTLE_TITLE));
+                Loader.LoadOfficeTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_OFFICE_TITLE));
+                Loader.LoadRoleTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ROLE_TITLE));
+                Loader.LoadSpecialTitles(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SPECIAL_TITLE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(40);
             yield return wait;
-            Loader.LoadSeashellCircle(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIIVTY_SEASHELLCIRCLE));
-
+            try
+            {
+                Loader.LoadSeashellCircle(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIIVTY_SEASHELLCIRCLE));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(41);
             yield return wait;
-            Loader.LoadBulletConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_BULLETCONFIG));
-
+            try
+            {
+                Loader.LoadBulletConfig(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_BULLETCONFIG));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(42);
             yield return wait;
-            Loader.LoadBulletActionSetXML(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_BULLETACTIONSET_CONFIG));
-
             yield return wait;
+            try
+            {
+                Loader.LoadBulletActionSetXML(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_BULLETACTIONSET_CONFIG));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             yield return this.LoadSkillActionSetSound();
 
             this.OnProgressBarReport?.Invoke(45);
             yield return wait;
-            Loader.LoadCharacterActionSetLayerSort(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIONSET_LAYERSORT));
-
+            try
+            {
+                Loader.LoadCharacterActionSetLayerSort(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIONSET_LAYERSORT));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(50);
             yield return wait;
             yield return Loader.LoadItems(this.GameConfigAssetBundle, this.OnProgressBarReport);
 
             this.OnProgressBarReport?.Invoke(90);
             yield return wait;
-            Loader.LoadItemValue(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.ItemValueCalculation));
-            Loader.LoadSignetExp(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.SignetExp));
-            Loader.LoadEquipRefine(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.EquipRefineRecipe));
-
+            try
+            {
+                Loader.LoadItemValue(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.ItemValueCalculation));
+                Loader.LoadSignetExp(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.SignetExp));
+                Loader.LoadEquipRefine(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.EquipRefineRecipe));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(92);
             yield return wait;
-            Loader.LoadTasks(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SYSTEMTASK));
-
+            try
+            {
+                Loader.LoadTasks(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_SYSTEMTASK));
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(93);
             yield return wait;
-            byte[] actionConfigBytes = ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIONCONFIG);
-            Loader.LoadActionConfig(actionConfigBytes);
-
-
+            try
+            {
+                byte[] actionConfigBytes = ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_ACTIONCONFIG);
+                Loader.LoadActionConfig(actionConfigBytes);
+    
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(94);
             yield return wait;
-            byte[] characterActionSetSoundBytes = ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_CHARACTERACTIONSETSOUND);
-            Loader.LoadCharacterActionSetSound(characterActionSetSoundBytes);
-
-
+            try
+            {
+                byte[] characterActionSetSoundBytes = ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_CHARACTERACTIONSETSOUND);
+                Loader.LoadCharacterActionSetSound(characterActionSetSoundBytes);
+    
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(95);
             yield return wait;
-            byte[] monsterActionSetSoundBytes = ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_MONSTERACTIONSETSOUND);
-            Loader.LoadMonsterActionSetSound(monsterActionSetSoundBytes);
-
-
+            try
+            {
+                byte[] monsterActionSetSoundBytes = ResourceLoader.LoadBytesFromBundle(this.GameConfigAssetBundle, Consts.XML_MONSTERACTIONSETSOUND);
+                Loader.LoadMonsterActionSetSound(monsterActionSetSoundBytes);
+    
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(96);
             yield return wait;
-            Loader.LoadLifeSkills(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_LIFESKILL));
-
-
+            try
+            {
+                Loader.LoadLifeSkills(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_LIFESKILL));
+    
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
             this.OnProgressBarReport?.Invoke(97);
             yield return wait;
-            Loader.LoadReputes(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_REPUTE));
-
-            /// Mặc định tải xuống âm thanh động tác nhân vật
-            KTResourceManager.Instance.LoadAssetBundle(Loader.CharacterActionSetSoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
-            /// Mặc định tải xuống âm thanh động tác quái
-            KTResourceManager.Instance.LoadAssetBundle(Loader.MonsterActionSetSoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
-            /// Mặc định tải xuống âm thanh động tác kỹ năng
-            KTResourceManager.Instance.LoadAssetBundle(Loader.SkillCastSoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
-            /// Mặc định tải xuống âm thanh đạn
-            KTResourceManager.Instance.LoadAssetBundle(Loader.BulletActionSetXML.SoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
-
-
+            try
+            {
+                Loader.LoadReputes(ResourceLoader.LoadXMLFromBundle(this.GameConfigAssetBundle, Consts.XML_REPUTE));
+    
+                /// Mặc định tải xuống âm thanh động tác nhân vật
+                if (!string.IsNullOrEmpty(Loader.CharacterActionSetSoundBundleDir))
+                KTResourceManager.Instance.LoadAssetBundle(Loader.CharacterActionSetSoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
+                /// Mặc định tải xuống âm thanh động tác quái
+                if (!string.IsNullOrEmpty(Loader.MonsterActionSetSoundBundleDir))
+                KTResourceManager.Instance.LoadAssetBundle(Loader.MonsterActionSetSoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
+                /// Mặc định tải xuống âm thanh động tác kỹ năng
+                if (!string.IsNullOrEmpty(Loader.SkillCastSoundBundleDir))
+                KTResourceManager.Instance.LoadAssetBundle(Loader.SkillCastSoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
+                /// Mặc định tải xuống âm thanh đạn
+                if (Loader.BulletActionSetXML != null && !string.IsNullOrEmpty(Loader.BulletActionSetXML.SoundBundleDir))
+                KTResourceManager.Instance.LoadAssetBundle(Loader.BulletActionSetXML.SoundBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
+    
+    
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
 #if UNITY_EDITOR
             this.DoEditorLoad();
 #endif
 
             this.OnProgressBarReport?.Invoke(98);
             yield return wait;
+            try
+            {
             this.LoadInitResource();
+            }
+            catch (System.Exception ex)
+            {
+                KTDebug.LogException(ex);
+            }
 
             this.OnProgressBarReport?.Invoke(100);
             yield return wait;
@@ -278,8 +545,11 @@ namespace FS.VLTK.Loader
             GameObject.Destroy(this.gameObject);
 
             /// Xóa AssetBundle
-            this.GameConfigAssetBundle.Unload(true);
-            GameObject.Destroy(this.GameConfigAssetBundle);
+            if (this.GameConfigAssetBundle != null)
+            {
+                this.GameConfigAssetBundle.Unload(true);
+                GameObject.Destroy(this.GameConfigAssetBundle);
+            }
             #endregion
 
             /// Gọi GC dọn rác
@@ -362,6 +632,8 @@ namespace FS.VLTK.Loader
                     Name = Loader.ElementXML.Fire.Name,
                 };
 
+                if (bundle != null)
+                {
                 Sprite[] assets = bundle.LoadAssetWithSubAssets<UnityEngine.Sprite>(Loader.ElementXML.AtlasName);
                 for (int i = 0; i < assets.Length; i++)
                 {
@@ -429,7 +701,8 @@ namespace FS.VLTK.Loader
                     }
                 }
 
-                bundle.Unload(false);
+                    bundle.Unload(false);
+                }
             }
             #endregion
 
@@ -437,10 +710,14 @@ namespace FS.VLTK.Loader
             /// Đường dẫn folder UI/Icon
             string uiIconFolderDir = Global.WebPath(string.Format("Data/{0}/Icon", Consts.UI_DIR), true);
             /// Đoạn này phải để (bất kể Android, IOS hay Editor) vì đây là Folder chứ không phải File nên thằng Android đọc vào sẽ lỗi
+#if UNITY_IOS || UNITY_EDITOR
+            uiIconFolderDir = PathUtils.NormalizeLocalPath(uiIconFolderDir);
+#else
             if (uiIconFolderDir.Contains("file:///"))
             {
                 uiIconFolderDir = uiIconFolderDir.Replace("file:///", "");
             }
+#endif
 
             /// Không tồn tại
             if (!Directory.Exists(uiIconFolderDir))
@@ -468,13 +745,19 @@ namespace FS.VLTK.Loader
 
             #region Animated titles
             /// Phi phong
+            if (!string.IsNullOrEmpty(Loader.MantleTitlesBundleDir))
+            {
             string mantleTitlesBundleDir = string.Format("{0}/{1}", Consts.UI_DIR, Loader.MantleTitlesBundleDir);
             KTResourceManager.Instance.LoadAssetBundle(mantleTitlesBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
             KTResourceManager.Instance.LoadAssetWithSubAssets<Sprite>(mantleTitlesBundleDir, Loader.MantleTitlesAtlasName, true, KTResourceManager.KTResourceCacheType.CachedPermenently);
+            }
             /// Quan hàm
+            if (!string.IsNullOrEmpty(Loader.OfficeTitlesBundleDir))
+            {
             string officeTitlesBundleDir = string.Format("{0}/{1}", Consts.UI_DIR, Loader.OfficeTitlesBundleDir);
             KTResourceManager.Instance.LoadAssetBundle(officeTitlesBundleDir, false, KTResourceManager.KTResourceCacheType.CachedPermenently);
             KTResourceManager.Instance.LoadAssetWithSubAssets<Sprite>(officeTitlesBundleDir, Loader.OfficeTitlesAtlasName, true, KTResourceManager.KTResourceCacheType.CachedPermenently);
+            }
             #endregion
         }
         #endregion

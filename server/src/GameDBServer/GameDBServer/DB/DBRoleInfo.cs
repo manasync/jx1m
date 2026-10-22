@@ -601,7 +601,7 @@ namespace GameDBServer.DB
             using (MySqlUnity conn = new MySqlUnity())
             {
                 string cmdText = string.Format("select * from t_roleparams_long where rid={0};", roleId);
-                DataTable dataTable = conn.ExecuteReader(cmdText).GetSchemaTable();
+                DataTable dataTable = conn.ReadSqlToTable(cmdText);
                 if (dataTable.Rows.Count > 0)
                 {
                     ConcurrentDictionary<string, RoleParamsData> dict = dbRoleInfo.RoleParamsDict;
@@ -629,7 +629,7 @@ namespace GameDBServer.DB
                 }
 
                 cmdText = string.Format("select * from t_roleparams_char where rid={0};", roleId);
-                dataTable = conn.ExecuteReader(cmdText).GetSchemaTable();
+                dataTable = conn.ReadSqlToTable(cmdText);
                 if (dataTable.Rows.Count > 0)
                 {
                     ConcurrentDictionary<string, RoleParamsData> dict = dbRoleInfo.RoleParamsDict;

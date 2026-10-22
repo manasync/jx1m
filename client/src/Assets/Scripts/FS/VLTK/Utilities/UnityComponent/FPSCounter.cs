@@ -50,7 +50,7 @@ namespace FS.VLTK.Utilities.UnityComponent
             int fc = Time.frameCount;
 
             /// Tính số FPS
-            MainGame.Instance.FPS = (fc - this.lastFrameCount) / (t - this.lastTouchTimer);
+            if (MainGame.Instance != null && t > this.lastTouchTimer) { MainGame.Instance.FPS = (fc - this.lastFrameCount) / (t - this.lastTouchTimer); }
 
             this.lastFrameCount = fc;
             this.lastTouchTimer = t;

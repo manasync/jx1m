@@ -832,7 +832,7 @@ namespace FS.VLTK
         public static bool IsFileExist(string webPath)
         {
             /// Nếu là Editor
-            webPath = webPath.Replace("file:///", "");
+            webPath = FS.GameEngine.Logic.PathUtils.NormalizeLocalPath(webPath);
 
             /// Trả về kết quả
             return File.Exists(webPath);
@@ -846,7 +846,7 @@ namespace FS.VLTK
         public static bool IsFolderExist(string webPath)
         {
             /// Nếu là Editor
-            webPath = webPath.Replace("file:///", "");
+            webPath = FS.GameEngine.Logic.PathUtils.NormalizeLocalPath(webPath);
 
             /// Trả về kết quả
             return Directory.Exists(webPath);

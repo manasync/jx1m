@@ -49,17 +49,28 @@ namespace FS.GameEngine.Logic
         /// <returns></returns>
         public static string SteamingAssetsPath(string path = "")
         {
-            if (Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                return "file:///" + Application.dataPath + "/StreamingAssets/" + path;
-            }
-            else if (Application.platform == RuntimePlatform.Android)
+            if (Application.platform == RuntimePlatform.Android)
             {
                 return Application.streamingAssetsPath + "/" + path;
             }
+
+            string fullPath;
+            if (Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                fullPath = string.IsNullOrEmpty(path) ? Application.dataPath + "/StreamingAssets" : Application.dataPath + "/StreamingAssets/" + path;
+            }
             else
             {
-                return "file:///" + Application.streamingAssetsPath + "/" + path;
+                fullPath = string.IsNullOrEmpty(path) ? Application.streamingAssetsPath : Application.streamingAssetsPath + "/" + path;
+            }
+
+            try
+            {
+                return new System.Uri(fullPath).AbsoluteUri;
+            }
+            catch
+            {
+                return "file://" + fullPath;
             }
         }
 
@@ -67,6 +78,37 @@ namespace FS.GameEngine.Logic
         /// Lấy đường dẫn đến Folder StreamingAssets
         /// </summary>
         /// <returns></returns>
+        /// <summary>
+        /// Chuẩn hoá đường dẫn file cục bộ từ URL hoặc chuỗi path
+        /// </summary>
+        public static string NormalizeLocalPath(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return url;
+            if (url.StartsWith("file:///"))
+            {
+                url = url.Substring(7);
+            }
+            else if (url.StartsWith("file://"))
+            {
+                url = url.Substring(7);
+            }
+            if (Application.platform != RuntimePlatform.WindowsPlayer && Application.platform != RuntimePlatform.WindowsEditor)
+            {
+                if (!url.StartsWith("/") && !url.Contains("://"))
+                {
+                    url = "/" + url;
+                }
+            }
+            else
+            {
+                if (url.StartsWith("/") && url.Length > 2 && url[2] == ':')
+                {
+                    url = url.Substring(1);
+                }
+            }
+            return url;
+        }
+
         public static string StreamingAssetsPath_OnDisk(string path = "")
         {
             if (Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)

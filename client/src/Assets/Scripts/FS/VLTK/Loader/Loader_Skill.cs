@@ -162,6 +162,7 @@ namespace FS.VLTK.Loader
         /// <param name="bytes"></param>
         public static void LoadBulletActionSetSound(byte[] bytes)
         {
+            if (bytes == null || bytes.Length == 0) return;
             {
                 int i = 0;
                 while (i < bytes.Length)

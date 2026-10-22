@@ -194,7 +194,7 @@ namespace FS.VLTK.Utilities.UnityComponent
             /// Tải xuống Bundle
             KTResourceManager.Instance.LoadAssetBundle(bundleDir);
             /// Tải xuống Atlas
-            if (KTResourceManager.Instance.LoadAsset<AudioClip>(bundleDir, this._SoundName, false))
+            if (KTResourceManager.Instance.HasBundle(bundleDir) && KTResourceManager.Instance.LoadAsset<AudioClip>(bundleDir, this._SoundName, false))
             {
                 /// AudioClip tương ứng
                 AudioClip sound = KTResourceManager.Instance.GetAsset<AudioClip>(bundleDir, this._SoundName);

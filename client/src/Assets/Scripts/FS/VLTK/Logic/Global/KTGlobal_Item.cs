@@ -318,127 +318,175 @@ namespace FS.VLTK
         /// <returns></returns>
         public static string GetArmorResByID(int armorID, int sex)
         {
-            if (Loader.Loader.Items.TryGetValue(armorID, out ItemData itemData))
+            if (Loader.Loader.Items != null && Loader.Loader.Items.TryGetValue(armorID, out ItemData itemData))
             {
                 if (sex == (int)Sex.MALE)
                 {
-                    if (Loader.Loader.CharacterActionSetXML.MaleArmorByCode.TryGetValue(itemData.ResManID, out CharacterActionSetXML.Component component))
+                    if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleArmorByCode != null && Loader.Loader.CharacterActionSetXML.MaleArmorByCode.TryGetValue(itemData.ResManID, out CharacterActionSetXML.Component component))
                     {
                         return component.ID;
                     }
+                    else if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleArmorByCode != null && Loader.Loader.CharacterActionSetXML.MaleArmorByCode.TryGetValue(KTGlobal.DefaultMaleArmor, out CharacterActionSetXML.Component defComp))
+                    {
+                        return defComp.ID;
+                    }
                     else
                     {
-                        return Loader.Loader.CharacterActionSetXML.MaleArmorByCode[KTGlobal.DefaultMaleArmor].ID;
+                        return "body20";
                     }
                 }
                 else
                 {
-                    if (Loader.Loader.CharacterActionSetXML.FemaleArmorByCode.TryGetValue(itemData.ResWomanID, out CharacterActionSetXML.Component component))
+                    if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleArmorByCode != null && Loader.Loader.CharacterActionSetXML.FemaleArmorByCode.TryGetValue(itemData.ResWomanID, out CharacterActionSetXML.Component component))
                     {
                         return component.ID;
                     }
+                    else if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleArmorByCode != null && Loader.Loader.CharacterActionSetXML.FemaleArmorByCode.TryGetValue(KTGlobal.DefaultFemaleArmor, out CharacterActionSetXML.Component defComp))
+                    {
+                        return defComp.ID;
+                    }
                     else
                     {
-                        return Loader.Loader.CharacterActionSetXML.FemaleArmorByCode[KTGlobal.DefaultFemaleArmor].ID;
+                        return "body20";
                     }
                 }
             }
 
             if (sex == (int)Sex.MALE)
             {
-                return Loader.Loader.CharacterActionSetXML.MaleArmorByCode[KTGlobal.DefaultMaleArmor].ID;
+                if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleArmorByCode != null && Loader.Loader.CharacterActionSetXML.MaleArmorByCode.TryGetValue(KTGlobal.DefaultMaleArmor, out CharacterActionSetXML.Component defComp))
+                {
+                    return defComp.ID;
+                }
+                return "body20";
             }
             else
             {
-                return Loader.Loader.CharacterActionSetXML.FemaleArmorByCode[KTGlobal.DefaultFemaleArmor].ID;
+                if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleArmorByCode != null && Loader.Loader.CharacterActionSetXML.FemaleArmorByCode.TryGetValue(KTGlobal.DefaultFemaleArmor, out CharacterActionSetXML.Component defComp))
+                {
+                    return defComp.ID;
+                }
+                return "body20";
             }
         }
 
         /// <summary>
         /// Trả về Res vũ khí theo ID
         /// </summary>
-        /// <param name="weaponID"></param>
-        /// <param name="sex"></param>
+        /// <param name=weaponID></param>
+        /// <param name=sex></param>
         /// <returns></returns>
         public static string GetWeaponResByID(int weaponID, int sex)
         {
-            if (Loader.Loader.Items.TryGetValue(weaponID, out ItemData itemData))
+            if (Loader.Loader.Items != null && Loader.Loader.Items.TryGetValue(weaponID, out ItemData itemData))
             {
                 if (sex == (int)Sex.MALE)
                 {
-                    if (Loader.Loader.CharacterActionSetXML.MaleWeaponByCode.TryGetValue(itemData.ResManID, out CharacterActionSetXML.Component component))
+                    if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleWeaponByCode != null && Loader.Loader.CharacterActionSetXML.MaleWeaponByCode.TryGetValue(itemData.ResManID, out CharacterActionSetXML.Component component))
                     {
                         return component.ID;
                     }
+                    else if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleWeaponByCode != null && Loader.Loader.CharacterActionSetXML.MaleWeaponByCode.TryGetValue(KTGlobal.DefaultMaleWeapon, out CharacterActionSetXML.Component defComp))
+                    {
+                        return defComp.ID;
+                    }
                     else
                     {
-                        return Loader.Loader.CharacterActionSetXML.MaleWeaponByCode[KTGlobal.DefaultMaleWeapon].ID;
+                        return "weapon02";
                     }
                 }
                 else
                 {
-                    if (Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode.TryGetValue(itemData.ResWomanID, out CharacterActionSetXML.Component component))
+                    if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode != null && Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode.TryGetValue(itemData.ResWomanID, out CharacterActionSetXML.Component component))
                     {
                         return component.ID;
                     }
+                    else if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode != null && Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode.TryGetValue(KTGlobal.DefaultFemaleWeapon, out CharacterActionSetXML.Component defComp))
+                    {
+                        return defComp.ID;
+                    }
                     else
                     {
-                        return Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode[KTGlobal.DefaultFemaleWeapon].ID;
+                        return "weapon02";
                     }
                 }
             }
 
             if (sex == (int)Sex.MALE)
             {
-                return Loader.Loader.CharacterActionSetXML.MaleWeaponByCode[KTGlobal.DefaultMaleWeapon].ID;
+                if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleWeaponByCode != null && Loader.Loader.CharacterActionSetXML.MaleWeaponByCode.TryGetValue(KTGlobal.DefaultMaleWeapon, out CharacterActionSetXML.Component defComp))
+                {
+                    return defComp.ID;
+                }
+                return "weapon02";
             }
             else
             {
-                return Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode[KTGlobal.DefaultFemaleWeapon].ID;
+                if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode != null && Loader.Loader.CharacterActionSetXML.FemaleWeaponByCode.TryGetValue(KTGlobal.DefaultFemaleWeapon, out CharacterActionSetXML.Component defComp))
+                {
+                    return defComp.ID;
+                }
+                return "weapon02";
             }
         }
 
         /// <summary>
         /// Trả về Res mũ theo ID
         /// </summary>
-        /// <param name="helmID"></param>
-        /// <param name="sex"></param>
+        /// <param name=helmID></param>
+        /// <param name=sex></param>
         /// <returns></returns>
         public static string GetHelmResByID(int helmID, int sex)
         {
-            if (Loader.Loader.Items.TryGetValue(helmID, out ItemData itemData))
+            if (Loader.Loader.Items != null && Loader.Loader.Items.TryGetValue(helmID, out ItemData itemData))
             {
                 if (sex == (int)Sex.MALE)
                 {
-                    if (Loader.Loader.CharacterActionSetXML.MaleHeadByCode.TryGetValue(itemData.ResManID, out CharacterActionSetXML.Component component))
+                    if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleHeadByCode != null && Loader.Loader.CharacterActionSetXML.MaleHeadByCode.TryGetValue(itemData.ResManID, out CharacterActionSetXML.Component component))
                     {
                         return component.ID;
                     }
+                    else if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleHeadByCode != null && Loader.Loader.CharacterActionSetXML.MaleHeadByCode.TryGetValue(KTGlobal.DefaultMaleHelm, out CharacterActionSetXML.Component defComp))
+                    {
+                        return defComp.ID;
+                    }
                     else
                     {
-                        return Loader.Loader.CharacterActionSetXML.MaleHeadByCode[KTGlobal.DefaultMaleHelm].ID;
+                        return "helm20";
                     }
                 }
                 else
                 {
-                    if (Loader.Loader.CharacterActionSetXML.FemaleHeadByCode.TryGetValue(itemData.ResWomanID, out CharacterActionSetXML.Component component))
+                    if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleHeadByCode != null && Loader.Loader.CharacterActionSetXML.FemaleHeadByCode.TryGetValue(itemData.ResWomanID, out CharacterActionSetXML.Component component))
                     {
                         return component.ID;
                     }
+                    else if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleHeadByCode != null && Loader.Loader.CharacterActionSetXML.FemaleHeadByCode.TryGetValue(KTGlobal.DefaultFemaleHelm, out CharacterActionSetXML.Component defComp))
+                    {
+                        return defComp.ID;
+                    }
                     else
                     {
-                        return Loader.Loader.CharacterActionSetXML.FemaleHeadByCode[KTGlobal.DefaultFemaleHelm].ID;
+                        return "helm20";
                     }
                 }
             }
 
             if (sex == (int)Sex.MALE)
             {
-                return Loader.Loader.CharacterActionSetXML.MaleHeadByCode[KTGlobal.DefaultMaleHelm].ID;
+                if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.MaleHeadByCode != null && Loader.Loader.CharacterActionSetXML.MaleHeadByCode.TryGetValue(KTGlobal.DefaultMaleHelm, out CharacterActionSetXML.Component defComp))
+                {
+                    return defComp.ID;
+                }
+                return "helm20";
             }
             else
             {
-                return Loader.Loader.CharacterActionSetXML.FemaleHeadByCode[KTGlobal.DefaultFemaleHelm].ID;
+                if (Loader.Loader.CharacterActionSetXML != null && Loader.Loader.CharacterActionSetXML.FemaleHeadByCode != null && Loader.Loader.CharacterActionSetXML.FemaleHeadByCode.TryGetValue(KTGlobal.DefaultFemaleHelm, out CharacterActionSetXML.Component defComp))
+                {
+                    return defComp.ID;
+                }
+                return "helm20";
             }
         }
 

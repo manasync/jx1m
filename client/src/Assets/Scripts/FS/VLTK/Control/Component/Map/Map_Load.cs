@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using FS.GameFramework.Logic;
 using FS.VLTK.Utilities.UnityComponent;
 using System;
@@ -23,11 +23,12 @@ namespace FS.VLTK.Control.Component
         {
             string url = Global.WebPath(string.Format("Data/{0}/{1}.unity3d", FS.VLTK.Loader.Loader.Maps[this.MapCode].ImageFolder, layerID));
 #if UNITY_IOS || UNITY_EDITOR
-            if (url.Contains("file:///"))
-            {
-                url = url.Replace("file:///", "");
-            }
+            url = FS.GameEngine.Logic.PathUtils.NormalizeLocalPath(url);
 #endif
+            if (!System.IO.File.Exists(url))
+            {
+                return null;
+            }
             /// Bundle tương ứng
             AssetBundle mapImageBundle = AssetBundle.LoadFromFile(url);
 
@@ -64,18 +65,41 @@ namespace FS.VLTK.Control.Component
         {
             string url = Global.WebPath(string.Format("Data/{0}/{1}.unity3d", FS.VLTK.Loader.Loader.Maps[this.MapCode].ImageFolder, layerID));
 #if UNITY_IOS || UNITY_EDITOR
-            if (url.Contains("file:///"))
+            url = FS.GameEngine.Logic.PathUtils.NormalizeLocalPath(url);
+            if (!System.IO.File.Exists(url))
             {
-                url = url.Replace("file:///", "");
+                done?.Invoke(partID, null);
+                yield break;
             }
 #endif
-            UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(url);
+            UnityWebRequest request = null;
+            try
+            {
+                request = UnityWebRequestAssetBundle.GetAssetBundle(url);
+            }
+            catch (Exception)
+            {
+                done?.Invoke(partID, null);
+                yield break;
+            }
+
             yield return request.SendWebRequest();
 
             /// Bundle tương ứng
-            AssetBundle mapImageBundle = DownloadHandlerAssetBundle.GetContent(request);
+            AssetBundle mapImageBundle = null;
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                try
+                {
+                    mapImageBundle = DownloadHandlerAssetBundle.GetContent(request);
+                }
+                catch (Exception) {}
+            }
             /// Giải phóng bộ nhớ
-            request.downloadHandler.Dispose();
+            if (request.downloadHandler != null)
+            {
+                request.downloadHandler.Dispose();
+            }
             request.Dispose();
 
             /// Nếu tồn tại
@@ -83,10 +107,13 @@ namespace FS.VLTK.Control.Component
             {
                 AssetBundleRequest assetRequest = mapImageBundle.LoadAssetWithSubAssetsAsync<Sprite>(layerID.ToString());
                 yield return assetRequest;
-                Sprite sprite = assetRequest.allAssets[0] as Sprite;
+                Sprite sprite = (assetRequest.allAssets != null && assetRequest.allAssets.Length > 0) ? assetRequest.allAssets[0] as Sprite : null;
 
                 /// Thêm vào danh sách đã tải
-                this.ListMapSprites[layerID] = sprite;
+                if (sprite != null)
+                {
+                    this.ListMapSprites[layerID] = sprite;
+                }
 
                 /// Xóa Bundle tương ứng
                 mapImageBundle.Unload(false);
@@ -190,12 +217,13 @@ namespace FS.VLTK.Control.Component
             {
                 string url = Global.WebPath(string.Format("Data/{0}", FS.VLTK.Loader.Loader.Maps[this.MapCode].MusicBundle));
 #if UNITY_IOS || UNITY_EDITOR
-                if (url.Contains("file:///"))
-                {
-                    url = url.Replace("file:///", "");
-                }
+                url = FS.GameEngine.Logic.PathUtils.NormalizeLocalPath(url);
 #endif
-                AssetBundle musicBundle = AssetBundle.LoadFromFile(url);
+                AssetBundle musicBundle = null;
+                if (System.IO.File.Exists(url))
+                {
+                    musicBundle = AssetBundle.LoadFromFile(url);
+                }
 
                 if (musicBundle != null)
                 {
@@ -280,8 +308,10 @@ namespace FS.VLTK.Control.Component
                     });
 
                     /// Chừng nào chưa tải xong
-                    while (totalLoadedPart < totalRequireParts)
+                    float timeout = 5f;
+                    while (totalLoadedPart < totalRequireParts && timeout > 0f)
                     {
+                        timeout -= Time.deltaTime;
                         /// Đợi
                         yield return null;
                     }
@@ -297,12 +327,13 @@ namespace FS.VLTK.Control.Component
             {
                 string url = Global.WebPath(string.Format("Data/{0}/{1}.unity3d", FS.VLTK.Loader.Loader.Maps[this.MapCode].ImageFolder, FS.VLTK.Loader.Loader.Maps[this.MapCode].MinimapName));
 #if UNITY_IOS || UNITY_EDITOR
-                if (url.Contains("file:///"))
-                {
-                    url = url.Replace("file:///", "");
-                }
+                url = FS.GameEngine.Logic.PathUtils.NormalizeLocalPath(url);
 #endif
-                AssetBundle mapImageBundle = AssetBundle.LoadFromFile(url);
+                AssetBundle mapImageBundle = null;
+                if (System.IO.File.Exists(url))
+                {
+                    mapImageBundle = AssetBundle.LoadFromFile(url);
+                }
 
                 /// Nếu tồn tại
                 if (mapImageBundle != null)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -113,18 +113,29 @@ namespace FS.VLTK.Entities.ActionSet.Character
 				FemaleActions = new Dictionary<string, ActionInfo>(),
 			};
 
-			/// Duyệt danh sách động tác của nam
-			foreach (XElement node in xmlNode.Element("Male").Elements("Action"))
+			if (xmlNode == null)
 			{
-				ActionInfo actionInfo = ActionInfo.Parse(node);
-				actionSetLayerSort.MaleActions[actionInfo.Name] = actionInfo;
+				return actionSetLayerSort;
 			}
 
-			/// Duyệt danh sách động tác của nữ
-			foreach (XElement node in xmlNode.Element("Female").Elements("Action"))
+			XElement maleNode = xmlNode.Element("Male");
+			if (maleNode != null)
 			{
-				ActionInfo actionInfo = ActionInfo.Parse(node);
-				actionSetLayerSort.FemaleActions[actionInfo.Name] = actionInfo;
+				foreach (XElement node in maleNode.Elements("Action"))
+				{
+					ActionInfo actionInfo = ActionInfo.Parse(node);
+					actionSetLayerSort.MaleActions[actionInfo.Name] = actionInfo;
+				}
+			}
+
+			XElement femaleNode = xmlNode.Element("Female");
+			if (femaleNode != null)
+			{
+				foreach (XElement node in femaleNode.Elements("Action"))
+				{
+					ActionInfo actionInfo = ActionInfo.Parse(node);
+					actionSetLayerSort.FemaleActions[actionInfo.Name] = actionInfo;
+				}
 			}
 
 			/// Trả về kết quả

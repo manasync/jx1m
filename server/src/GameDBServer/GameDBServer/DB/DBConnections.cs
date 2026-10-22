@@ -1,4 +1,4 @@
-﻿using MySQLDriverCS;
+using MySQLDriverCS;
 using Server.Tools;
 using System;
 using System.Collections.Concurrent;
@@ -111,12 +111,14 @@ namespace GameDBServer.DB
         public bool SupplyConnections()
         {
             bool result = false;
-            //lock (this.Mutex)
+            while (CurrentCount < MaxCount)
             {
-                if (CurrentCount < MaxCount)
+                var newConn = CreateAConnection();
+                if (newConn == null)
                 {
-                    CreateAConnection();
+                    break;
                 }
+                result = true;
             }
 
             return result;
@@ -211,10 +213,13 @@ namespace GameDBServer.DB
                 {
                     if (lost)
                     {
-
+                        try
                         {
-                            CurrentCount--;
+                            conn?.Dispose();
                         }
+                        catch { }
+                        CurrentCount--;
+                        CreateAConnection();
                     }
                 }
             }

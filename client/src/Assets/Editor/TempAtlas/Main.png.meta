@@ -1,0 +1,1993 @@
+fileFormatVersion: 2
+guid: aebb04d9a566f476481a7bc5271458fc
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Background_Doigan_XinVao
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 0
+        width: 701
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 066e27e735c553d30800000000000000
+      internalID: 4410532923752769120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Hp_Mini
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 518
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc200b4bbff64f660800000000000000
+      internalID: 7418677613044957901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Left_Nhiemvu
+      rect:
+        serializedVersion: 2
+        x: 2364
+        y: 1050
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 281a99b5cd9075630800000000000000
+      internalID: 3915609243056185730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Minimaps
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 536
+        width: 241
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d52374d8a84c6ef0800000000000000
+      internalID: -113636000635083305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Nhanvatnho
+      rect:
+        serializedVersion: 2
+        x: 2462
+        y: 488
+        width: 159
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b713f4113c7ef5f0800000000000000
+      internalID: -721002340085983309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Top
+      rect:
+        serializedVersion: 2
+        x: 3525
+        y: 0
+        width: 280
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32b97bec6ab79c5e0800000000000000
+      internalID: -1888842612342285533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Top_EXP
+      rect:
+        serializedVersion: 2
+        x: 2222
+        y: 1056
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb8f8668cf24a24c0800000000000000
+      internalID: -4311560040899610434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Top_Hp
+      rect:
+        serializedVersion: 2
+        x: 2616
+        y: 510
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd5389508ed37c650800000000000000
+      internalID: 6253034674362791388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Top_Level
+      rect:
+        serializedVersion: 2
+        x: 2462
+        y: 456
+        width: 127
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c160a87838fe4d4a0800000000000000
+      internalID: -6569362608232987108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Top_Mp
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 1056
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac7271f18260d2480800000000000000
+      internalID: -8922468517361014838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Top_Theluc
+      rect:
+        serializedVersion: 2
+        x: 2234
+        y: 1056
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f226020455d469690800000000000000
+      internalID: -7595798692970339793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Banghoi
+      rect:
+        serializedVersion: 2
+        x: 2769
+        y: 904
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b98aa4bde545b6910800000000000000
+      internalID: 1831650439839000731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Caidat
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 408
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d3ff7e2e455c0e10800000000000000
+      internalID: 2165199315134313428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Chetao
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 612
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f9f317e02e965200800000000000000
+      internalID: 168495900225960433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Haohuu
+      rect:
+        serializedVersion: 2
+        x: 3219
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 441d51eedc69e1620800000000000000
+      internalID: 2746798633949450564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Hopthu
+      rect:
+        serializedVersion: 2
+        x: 3321
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 169c8f4ef4758cf70800000000000000
+      internalID: 9207705438814521697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Kynang
+      rect:
+        serializedVersion: 2
+        x: 3423
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa11aa112cb8d4be0800000000000000
+      internalID: -1491382235953491542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Nhanvat
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 306
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5810d8ba571797da0800000000000000
+      internalID: -5946597082762772091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Nhiemvu
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53ad8830c99caf860800000000000000
+      internalID: 7564580196033550901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Timnguoichoi
+      rect:
+        serializedVersion: 2
+        x: 2769
+        y: 802
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa7e79e7400e61780800000000000000
+      internalID: -8712530119193270358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Bottom_Tuido
+      rect:
+        serializedVersion: 2
+        x: 2667
+        y: 802
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fe2723b704e833c0800000000000000
+      internalID: -4379499915896213770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Chat
+      rect:
+        serializedVersion: 2
+        x: 2453
+        y: 917
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0acd26c208fa66890800000000000000
+      internalID: -7465086367284667232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Chay
+      rect:
+        serializedVersion: 2
+        x: 2565
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38f0aa2334416a260800000000000000
+      internalID: 7108391340696276867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Chay_Active
+      rect:
+        serializedVersion: 2
+        x: 2667
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a01093bd8a894f230800000000000000
+      internalID: 3671727447213670666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_GM
+      rect:
+        serializedVersion: 2
+        x: 2769
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c407ba64d01400720800000000000000
+      internalID: 2810317692755210316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Gan
+      rect:
+        serializedVersion: 2
+        x: 2565
+        y: 802
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 131919579ae493d70800000000000000
+      internalID: 9023329818142413105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Khinhcong
+      rect:
+        serializedVersion: 2
+        x: 2565
+        y: 904
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58abd4278e040b310800000000000000
+      internalID: 1418705249715993221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Kynang
+      rect:
+        serializedVersion: 2
+        x: 2770
+        y: 381
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d02873abb3c3281f0800000000000000
+      internalID: -1044205936371596787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_NPC
+      rect:
+        serializedVersion: 2
+        x: 2453
+        y: 578
+        width: 120
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b84bc00b82861a580800000000000000
+      internalID: -8817652071453117301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Next
+      rect:
+        serializedVersion: 2
+        x: 2565
+        y: 1006
+        width: 38
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 239a1c63d6f900410800000000000000
+      internalID: 1441327172177471794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Prev
+      rect:
+        serializedVersion: 2
+        x: 2871
+        y: 700
+        width: 38
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7b4a8ab2c903c610800000000000000
+      internalID: 1640165421250923386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Saphang
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 381
+        width: 134
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3839658156e6c28b0800000000000000
+      internalID: -5175640491276463229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Thien
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 102
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa8691841ccfc7ae0800000000000000
+      internalID: -1550086264653780817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_Thien_Active
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 204
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0a9e973329c0c890800000000000000
+      internalID: -7439725431321880052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Btn_item
+      rect:
+        serializedVersion: 2
+        x: 2453
+        y: 700
+        width: 110
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e9fb96fa1fdee5f0800000000000000
+      internalID: -725397183060510231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy Icon
+      rect:
+        serializedVersion: 2
+        x: 2605
+        y: 1049
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a9aefd90f57b3640800000000000000
+      internalID: 5060768282584197543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GrowPoint Icon
+      rect:
+        serializedVersion: 2
+        x: 2591
+        y: 456
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd7602095c2d287e0800000000000000
+      internalID: -1764616358007380001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon-cham
+      rect:
+        serializedVersion: 2
+        x: 2833
+        y: 271
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c30de8b1c62e15740800000000000000
+      internalID: 5139137603753136188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Auto
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 714
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 173b6d203e9493870800000000000000
+      internalID: 8663036597577888625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Auto_Active
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 816
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63b0e5f5c71655060800000000000000
+      internalID: 6941561587465325366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Bac
+      rect:
+        serializedVersion: 2
+        x: 2605
+        y: 1006
+        width: 55
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f087856f804a468a0800000000000000
+      internalID: -6312740419266906097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Bac_Khoa
+      rect:
+        serializedVersion: 2
+        x: 2769
+        y: 1006
+        width: 58
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bda1a75acb69a76e0800000000000000
+      internalID: -1838991760853165349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Banghoi
+      rect:
+        serializedVersion: 2
+        x: 3117
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59f3155346a9acdb0800000000000000
+      internalID: -4770831100063694955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Codoitruong
+      rect:
+        serializedVersion: 2
+        x: 2885
+        y: 219
+        width: 21
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c93ea3658be3a7000800000000000000
+      internalID: 34408908600304540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Cothanhvien
+      rect:
+        serializedVersion: 2
+        x: 2637
+        y: 1049
+        width: 21
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e14a44369cb475a0800000000000000
+      internalID: -6524382606844608023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Doikynang
+      rect:
+        serializedVersion: 2
+        x: 2694
+        y: 578
+        width: 117
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 096dd1a2fa955a700800000000000000
+      internalID: 550945138283501200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Doikynang_2
+      rect:
+        serializedVersion: 2
+        x: 2575
+        y: 578
+        width: 117
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d6c817ecf59ca260800000000000000
+      internalID: 7110222825152628436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Ngua
+      rect:
+        serializedVersion: 2
+        x: 2332
+        y: 934
+        width: 117
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac84c06ca2e8fccd0800000000000000
+      internalID: -2535651750823835446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Pet
+      rect:
+        serializedVersion: 2
+        x: 3015
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97a2a66785eeb00e0800000000000000
+      internalID: -2302484720758674823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_ToDoi
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 918
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83b5f116b21175cd0800000000000000
+      internalID: -2569566184380867784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Vang
+      rect:
+        serializedVersion: 2
+        x: 2667
+        y: 1006
+        width: 55
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cbf0e86d5a811f40800000000000000
+      internalID: 5697487137396554695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Vang_Khoa
+      rect:
+        serializedVersion: 2
+        x: 2815
+        y: 536
+        width: 58
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a62b5b17d793ac6b0800000000000000
+      internalID: -5275340802569686422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Joytick
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 284
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a35ade8cccc98370800000000000000
+      internalID: 8325410565113140132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Leader Icon
+      rect:
+        serializedVersion: 2
+        x: 2833
+        y: 219
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95cbe3f652cc388e0800000000000000
+      internalID: -1692284573808935847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Main_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2164
+        width: 2208
+        height: 1080
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2600ca59c2691be10800000000000000
+      internalID: 2211714010249429090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Main_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1082
+        width: 2208
+        height: 1080
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7605665a6bdcae00800000000000000
+      internalID: 1057461262287701629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Main_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2208
+        height: 1080
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41d3d0ae62a8b00f0800000000000000
+      internalID: -1149673380122903276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Map HP Bar Background
+      rect:
+        serializedVersion: 2
+        x: 2544
+        y: 510
+        width: 70
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 550247e73155ad460800000000000000
+      internalID: 7267214490929995861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Map HP Bar Thumb
+      rect:
+        serializedVersion: 2
+        x: 2462
+        y: 522
+        width: 70
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca4861c3f5623140800000000000000
+      internalID: 4697929458897144513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster Icon
+      rect:
+        serializedVersion: 2
+        x: 2396
+        y: 1050
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efdbd5b200c36ef40800000000000000
+      internalID: 5757355145064988158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC Minimap
+      rect:
+        serializedVersion: 2
+        x: 2813
+        y: 578
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e60c631ebfa7c7280800000000000000
+      internalID: -9044218729432956818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Other Icon
+      rect:
+        serializedVersion: 2
+        x: 2332
+        y: 1050
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ff1c81939bc97c40800000000000000
+      internalID: 5510659453727023093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stall Background
+      rect:
+        serializedVersion: 2
+        x: 3525
+        y: 32
+        width: 200
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a1ee5b1e1da258a0800000000000000
+      internalID: -6317796982427557467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teammate Icon
+      rect:
+        serializedVersion: 2
+        x: 2881
+        y: 316
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ca0eb3ac7ad317c0800000000000000
+      internalID: -4101694606746449209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TeleportSymbol
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 790
+        width: 111
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1d361d3fe3cc5b40800000000000000
+      internalID: 5430430682991443226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: avatar_khung
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 934
+        width: 120
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bb13c2a481bf3030800000000000000
+      internalID: 3476692620577807287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: background_black_70%
+      rect:
+        serializedVersion: 2
+        x: 2462
+        y: 284
+        width: 170
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5dc595778bfbf940800000000000000
+      internalID: 5331131143135022429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bg_hpmp
+      rect:
+        serializedVersion: 2
+        x: 2462
+        y: 510
+        width: 80
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fea613dc3b3b8a00800000000000000
+      internalID: 759766094567616241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blue
+      rect:
+        serializedVersion: 2
+        x: 2881
+        y: 284
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1278567c5927702f0800000000000000
+      internalID: -1006710004073003231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cham
+      rect:
+        serializedVersion: 2
+        x: 2833
+        y: 147
+        width: 70
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3742fe0f63114dca0800000000000000
+      internalID: -5993146276455177101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chosse-target
+      rect:
+        serializedVersion: 2
+        x: 2453
+        y: 812
+        width: 103
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afc30845cee622ee0800000000000000
+      internalID: -1287344582165512966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gradient
+      rect:
+        serializedVersion: 2
+        x: 2453
+        y: 536
+        width: 360
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f533f7ba1f97c3d0800000000000000
+      internalID: -3186403274237200906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gran
+      rect:
+        serializedVersion: 2
+        x: 2881
+        y: 348
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04bc7999255f0f210800000000000000
+      internalID: 1364860422206245696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: icon-van-tieu
+      rect:
+        serializedVersion: 2
+        x: 2667
+        y: 904
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2e708afd09185820800000000000000
+      internalID: 2907101107295649323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: joy
+      rect:
+        serializedVersion: 2
+        x: 2323
+        y: 790
+        width: 120
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f7a9ba01414b6590800000000000000
+      internalID: -7679972991941629966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: khung_chat
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 147
+        width: 621
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99b658cb97a7264d0800000000000000
+      internalID: -3142814926678692967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kiem_1
+      rect:
+        serializedVersion: 2
+        x: 2555
+        y: 917
+        width: 8
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc77cac5b8db22400800000000000000
+      internalID: 298008931612784591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kiem_2
+      rect:
+        serializedVersion: 2
+        x: 2871
+        y: 762
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b7c67ad626465e40800000000000000
+      internalID: 5644776315643414448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kiem_3
+      rect:
+        serializedVersion: 2
+        x: 2875
+        y: 536
+        width: 35
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b13dd471f96309710800000000000000
+      internalID: 1697917116437353243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kiem_4
+      rect:
+        serializedVersion: 2
+        x: 2829
+        y: 1006
+        width: 46
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0371a517f0c4a2d40800000000000000
+      internalID: 5560340319152248624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lock-1
+      rect:
+        serializedVersion: 2
+        x: 2505
+        y: 1019
+        width: 41
+        height: 56
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a77485897f10f000800000000000000
+      internalID: 67588601202112425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lock-2
+      rect:
+        serializedVersion: 2
+        x: 2885
+        y: 252
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3767f4a86f38d85b0800000000000000
+      internalID: -5364486486222735757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lock_on_50x50
+      rect:
+        serializedVersion: 2
+        x: 2453
+        y: 1019
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dab529513ce07a510800000000000000
+      internalID: 1560232026950491053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nc
+      rect:
+        serializedVersion: 2
+        x: 2634
+        y: 284
+        width: 245
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03b23bc1afd658030800000000000000
+      internalID: 3496321606713813808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pet
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 510
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc974bb968e47dfa0800000000000000
+      internalID: -5776061657034491441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Background_Doigan_XinVao: 4410532923752769120
+      Background_Hp_Mini: 7418677613044957901
+      Background_Left_Nhiemvu: 3915609243056185730
+      Background_Minimaps: -113636000635083305
+      Background_Nhanvatnho: -721002340085983309
+      Background_Top: -1888842612342285533
+      Background_Top_EXP: -4311560040899610434
+      Background_Top_Hp: 6253034674362791388
+      Background_Top_Level: -6569362608232987108
+      Background_Top_Mp: -8922468517361014838
+      Background_Top_Theluc: -7595798692970339793
+      Btn_Bottom_Banghoi: 1831650439839000731
+      Btn_Bottom_Caidat: 2165199315134313428
+      Btn_Bottom_Chetao: 168495900225960433
+      Btn_Bottom_Haohuu: 2746798633949450564
+      Btn_Bottom_Hopthu: 9207705438814521697
+      Btn_Bottom_Kynang: -1491382235953491542
+      Btn_Bottom_Nhanvat: -5946597082762772091
+      Btn_Bottom_Nhiemvu: 7564580196033550901
+      Btn_Bottom_Timnguoichoi: -8712530119193270358
+      Btn_Bottom_Tuido: -4379499915896213770
+      Btn_Chat: -7465086367284667232
+      Btn_Chay: 7108391340696276867
+      Btn_Chay_Active: 3671727447213670666
+      Btn_GM: 2810317692755210316
+      Btn_Gan: 9023329818142413105
+      Btn_Khinhcong: 1418705249715993221
+      Btn_Kynang: -1044205936371596787
+      Btn_NPC: -8817652071453117301
+      Btn_Next: 1441327172177471794
+      Btn_Prev: 1640165421250923386
+      Btn_Saphang: -5175640491276463229
+      Btn_Thien: -1550086264653780817
+      Btn_Thien_Active: -7439725431321880052
+      Btn_item: -725397183060510231
+      Enemy Icon: 5060768282584197543
+      GrowPoint Icon: -1764616358007380001
+      Icon-cham: 5139137603753136188
+      Icon_Auto: 8663036597577888625
+      Icon_Auto_Active: 6941561587465325366
+      Icon_Bac: -6312740419266906097
+      Icon_Bac_Khoa: -1838991760853165349
+      Icon_Banghoi: -4770831100063694955
+      Icon_Codoitruong: 34408908600304540
+      Icon_Cothanhvien: -6524382606844608023
+      Icon_Doikynang: 550945138283501200
+      Icon_Doikynang_2: 7110222825152628436
+      Icon_Ngua: -2535651750823835446
+      Icon_Pet: -2302484720758674823
+      Icon_ToDoi: -2569566184380867784
+      Icon_Vang: 5697487137396554695
+      Icon_Vang_Khoa: -5275340802569686422
+      Joytick: 8325410565113140132
+      Leader Icon: -1692284573808935847
+      Main_1: 2211714010249429090
+      Main_2: 1057461262287701629
+      Main_3: -1149673380122903276
+      Map HP Bar Background: 7267214490929995861
+      Map HP Bar Thumb: 4697929458897144513
+      Monster Icon: 5757355145064988158
+      NPC Minimap: -9044218729432956818
+      Other Icon: 5510659453727023093
+      Stall Background: -6317796982427557467
+      Teammate Icon: -4101694606746449209
+      TeleportSymbol: 5430430682991443226
+      avatar_khung: 3476692620577807287
+      background_black_70%: 5331131143135022429
+      bg_hpmp: 759766094567616241
+      blue: -1006710004073003231
+      cham: -5993146276455177101
+      chosse-target: -1287344582165512966
+      gradient: -3186403274237200906
+      gran: 1364860422206245696
+      icon-van-tieu: 2907101107295649323
+      joy: -7679972991941629966
+      khung_chat: -3142814926678692967
+      kiem_1: 298008931612784591
+      kiem_2: 5644776315643414448
+      kiem_3: 1697917116437353243
+      kiem_4: 5560340319152248624
+      lock-1: 67588601202112425
+      lock-2: -5364486486222735757
+      lock_on_50x50: 1560232026950491053
+      nc: 3496321606713813808
+      pet: -5776061657034491441
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

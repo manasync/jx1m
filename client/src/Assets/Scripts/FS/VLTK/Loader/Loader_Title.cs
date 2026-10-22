@@ -1,4 +1,4 @@
-﻿using FS.VLTK.Entities.Config;
+using FS.VLTK.Entities.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +35,14 @@ namespace FS.VLTK.Loader
         public static void LoadMantleTitles(XElement xmlNode)
         {
             Loader.MantleTitles.Clear();
+            if (xmlNode == null) return;
 
-            Loader.MantleTitlesBundleDir = xmlNode.Element("Config").Attribute("BundleDir").Value;
-            Loader.MantleTitlesAtlasName = xmlNode.Element("Config").Attribute("AtlasName").Value;
+            XElement configNode = xmlNode.Element("Config");
+            if (configNode != null)
+            {
+                Loader.MantleTitlesBundleDir = configNode.Attribute("BundleDir")?.Value;
+                Loader.MantleTitlesAtlasName = configNode.Attribute("AtlasName")?.Value;
+            }
 
             foreach (XElement node in xmlNode.Elements("Title"))
             {
@@ -70,9 +75,14 @@ namespace FS.VLTK.Loader
         public static void LoadOfficeTitles(XElement xmlNode)
 		{
             Loader.OfficeTitles.Clear();
+            if (xmlNode == null) return;
 
-            Loader.OfficeTitlesBundleDir = xmlNode.Element("Config").Attribute("BundleDir").Value;
-            Loader.OfficeTitlesAtlasName = xmlNode.Element("Config").Attribute("AtlasName").Value;
+            XElement configNode = xmlNode.Element("Config");
+            if (configNode != null)
+            {
+                Loader.OfficeTitlesBundleDir = configNode.Attribute("BundleDir")?.Value;
+                Loader.OfficeTitlesAtlasName = configNode.Attribute("AtlasName")?.Value;
+            }
 
             foreach (XElement node in xmlNode.Elements("Rank"))
 			{

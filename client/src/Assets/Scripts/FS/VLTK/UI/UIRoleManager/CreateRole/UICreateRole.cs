@@ -352,6 +352,11 @@ namespace FS.VLTK.UI.RoleManager
                 KTResourceManager.Instance.ReleaseBundle(this.lastVideoBundle);
             }
 
+            if (!bundleDir.StartsWith("Resources/"))
+            {
+                bundleDir = "Resources/" + bundleDir;
+            }
+
             /// Đánh dấu Bundle
             this.lastVideoBundle = bundleDir;
             /// Tải xuống Bundle
@@ -361,11 +366,18 @@ namespace FS.VLTK.UI.RoleManager
 
             /// Video tương ứng
             VideoClip clip = KTResourceManager.Instance.GetAsset<VideoClip>(bundleDir, videoName);
-            /// Video
-            this.UI_VideoPlayer.Video = clip;
-            this.UI_VideoPlayer.Repeat = true;
-            /// Phát
-            this.UI_VideoPlayer.Play();
+            if (clip != null)
+            {
+                /// Video
+                this.UI_VideoPlayer.Video = clip;
+                this.UI_VideoPlayer.Repeat = true;
+                /// Phát
+                this.UI_VideoPlayer.Play();
+            }
+            else
+            {
+                KTDebug.LogError(string.Format("VideoClip '{0}' not found in bundle '{1}'!", videoName, bundleDir));
+            }
         }
 
         /// <summary>

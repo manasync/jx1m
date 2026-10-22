@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using FS.VLTK.Entities;
 using System;
 using System.Collections;
@@ -125,42 +125,49 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         private IEnumerator ReadStreamingAssetVersion()
         {
-            /// Đường dẫn
-            string fullPath = PathUtils.SteamingAssetsPath(LoadVersion.VersionFile);
-
-            /// Nội dung File
-            UnityWebRequest request = new UnityWebRequest(fullPath);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            /// Gửi yêu cầu
-            yield return request.SendWebRequest();
-
-            /// Nếu có lỗi gì đó
-            if (!string.IsNullOrEmpty(request.error))
+            string diskPath = PathUtils.NormalizeLocalPath(PathUtils.SteamingAssetsPath(LoadVersion.VersionFile));
+            if (File.Exists(diskPath))
             {
-                yield break;
-            }
-
-            try
-            {
-                /// Chuỗi Byte kết quả
-                byte[] byteData = request.downloadHandler.data;
-                /// Xóa yêu càu
-                request.downloadHandler.Dispose();
-                request.Dispose();
-                /// Chuyển thành chuỗi XML tương ứng
-                string strText = new UTF8Encoding().GetString(byteData);
-                /// Loại ký tự thừa ở đầu
-                string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-                if (strText.StartsWith(_byteOrderMarkUtf8))
+                try
                 {
-                    strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    string strText = File.ReadAllText(diskPath);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    this.streamingAssetGameInfo = GameInfo.Parse(XElement.Parse(strText));
+                    yield break;
                 }
-                /// Đọc dữ liệu
-                this.streamingAssetGameInfo = GameInfo.Parse(XElement.Parse(strText));
+                catch (Exception ex)
+                {
+                    UnityEngine.Debug.LogWarning("[LoadVersion] ReadStreamingAssetVersion File.ReadAllText error: " + ex);
+                }
             }
-            catch (Exception ex)
-            {
 
+            string fullPath = PathUtils.SteamingAssetsPath(LoadVersion.VersionFile);
+            using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
+            {
+                yield return request.SendWebRequest();
+                if (!string.IsNullOrEmpty(request.error))
+                {
+                    yield break;
+                }
+
+                try
+                {
+                    byte[] byteData = request.downloadHandler.data;
+                    string strText = new UTF8Encoding().GetString(byteData);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    this.streamingAssetGameInfo = GameInfo.Parse(XElement.Parse(strText));
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -170,57 +177,74 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         private IEnumerator ReadLocalVersionLocal()
         {
-            /// Đường dẫn
-            string fullPath = Global.WebPath(LoadVersion.VersionFile);
-
-            /// Nội dung File
-            UnityWebRequest request = new UnityWebRequest(fullPath);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            /// Gửi yêu cầu
-            yield return request.SendWebRequest();
-
-            /// Nếu có lỗi gì đó
-            if (!string.IsNullOrEmpty(request.error))
+            string persistentPath = PathUtils.GetPersistentPath(LoadVersion.VersionFile);
+            if (File.Exists(persistentPath))
             {
-                this.Faild?.Invoke(request.error);
+                try
+                {
+                    string strText = File.ReadAllText(persistentPath);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    GameInfo gameInfo = GameInfo.Parse(XElement.Parse(strText));
+                    if (this.streamingAssetGameInfo != null && int.Parse(this.streamingAssetGameInfo.Version) > int.Parse(gameInfo.Version))
+                    {
+                        this.localGameInfo = this.streamingAssetGameInfo;
+                    }
+                    else
+                    {
+                        this.localGameInfo = gameInfo;
+                    }
+                    yield break;
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (this.streamingAssetGameInfo != null)
+            {
+                this.localGameInfo = this.streamingAssetGameInfo;
                 yield break;
             }
 
-            try
+            string fullPath = Global.WebPath(LoadVersion.VersionFile);
+            using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
             {
-                /// Chuỗi Byte kết quả
-                byte[] byteData = request.downloadHandler.data;
-                /// Xóa yêu càu
-                request.downloadHandler.Dispose();
-                request.Dispose();
-                /// Chuyển thành chuỗi XML tương ứng
-                string strText = new UTF8Encoding().GetString(byteData);
-                /// Loại ký tự thừa ở đầu
-                string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-                if (strText.StartsWith(_byteOrderMarkUtf8))
-                {
-                    strText = strText.Replace(_byteOrderMarkUtf8, "");
-                }
-                /// Đọc dữ liệu
-                GameInfo gameInfo = GameInfo.Parse(XElement.Parse(strText));
+                yield return request.SendWebRequest();
 
-                /// Nếu phiên bản hiện tại nhỏ hơn phiên bản trong StreamingAsset
-                if (int.Parse(this.streamingAssetGameInfo.Version) > int.Parse(gameInfo.Version))
+                if (!string.IsNullOrEmpty(request.error))
                 {
-                    /// Gắn lại phiên bản hiện tại thành phiên bản trong StreamingAsset
+                    this.Faild?.Invoke(request.error);
+                    yield break;
+                }
+
+                try
+                {
+                    byte[] byteData = request.downloadHandler.data;
+                    string strText = new UTF8Encoding().GetString(byteData);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    GameInfo gameInfo = GameInfo.Parse(XElement.Parse(strText));
+
+                    if (this.streamingAssetGameInfo != null && int.Parse(this.streamingAssetGameInfo.Version) > int.Parse(gameInfo.Version))
+                    {
+                        this.localGameInfo = this.streamingAssetGameInfo;
+                    }
+                    else
+                    {
+                        this.localGameInfo = gameInfo;
+                    }
+                }
+                catch (Exception)
+                {
                     this.localGameInfo = this.streamingAssetGameInfo;
                 }
-                else
-                {
-                    /// Lấy phiên bản hiện tại mới đọc được
-                    this.localGameInfo = gameInfo;
-                }
-            }
-            catch (Exception ex)
-            {
-                //this.Faild?.Invoke(ex.ToString());
-                /// Toạch thì lấy file ở trong StreamingAsset
-                this.localGameInfo = this.streamingAssetGameInfo;
             }
         }
 
@@ -230,42 +254,37 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         private IEnumerator ReadServerVersion()
         {
-            /// Đường dẫn
-            string fullPath = string.Format("{0}{1}/{2}", this.localGameInfo.URL, Global.GetDeviceForWebURL(), LoadVersion.VersionFile);
-            /// Yêu cầu tải
-            UnityWebRequest request = new UnityWebRequest(fullPath);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            /// Gửi yêu cầu
-            yield return request.SendWebRequest();
+            string baseUrl = this.localGameInfo.URL;
+            if (!baseUrl.EndsWith("/")) baseUrl += "/";
+            string device = Global.GetDeviceForWebURL();
+            if (!string.IsNullOrEmpty(device)) baseUrl += device + "/";
+            string fullPath = baseUrl + LoadVersion.VersionFile;
 
-            /// Nếu có lỗi gì đó
-            if (!string.IsNullOrEmpty(request.error))
+            using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
             {
-                this.Faild?.Invoke(request.error);
-                yield break;
-            }
+                yield return request.SendWebRequest();
 
-            try
-            {
-                /// Chuỗi Byte kết quả
-                byte[] byteData = request.downloadHandler.data;
-                /// Xóa yêu càu
-                request.downloadHandler.Dispose();
-                request.Dispose();
-                /// TODO-Giải mã
-                string strText = new UTF8Encoding().GetString(byteData);
-                /// Loại ký tự thừa ở đầu
-                string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-                if (strText.StartsWith(_byteOrderMarkUtf8))
+                if (!string.IsNullOrEmpty(request.error))
                 {
-                    strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    this.Faild?.Invoke(request.error);
+                    yield break;
                 }
-                /// Đọc dữ liệu
-                this.serverGameInfo = GameInfo.Parse(XElement.Parse(strText));
-            }
-            catch (Exception ex)
-            {
-                this.Faild?.Invoke(ex.ToString());
+
+                try
+                {
+                    byte[] byteData = request.downloadHandler.data;
+                    string strText = new UTF8Encoding().GetString(byteData);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    this.serverGameInfo = GameInfo.Parse(XElement.Parse(strText));
+                }
+                catch (Exception ex)
+                {
+                    this.Faild?.Invoke(ex.ToString());
+                }
             }
         }
         

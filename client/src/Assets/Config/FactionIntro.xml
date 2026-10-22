@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FactionIntros>
+  <Faction ID="1" Description="Thiếu Lâm phái" TypeDesc="Ngoại công cận chiến" DiffRate="3" Icon="Btn_Class_ThieuLam" ActiveIcon="Btn_Class_ThieuLam_Active" Logo="Title_ThieuLam" VideoBundle="Resources/Video/Intro_ThieuLam.unity3d" Video="Intro_ThieuLam" />
+  <Faction ID="2" Description="Thiên Vương bang" TypeDesc="Ngoại công cận chiến" DiffRate="3" Icon="Btn_Class_ThienVuong" ActiveIcon="Btn_Class_ThienVuong_Active" Logo="Title_ThienVuong" VideoBundle="Resources/Video/Intro_ThienVuong.unity3d" Video="Intro_ThienVuong" />
+  <Faction ID="3" Description="Đường Môn" TypeDesc="Ám khí tầm xa" DiffRate="4" Icon="Btn_Class_DuongMon" ActiveIcon="Btn_Class_DuongMon_Active" Logo="Title_DuongMon" VideoBundle="Resources/Video/Intro_DuongMon.unity3d" Video="Intro_DuongMon" />
+  <Faction ID="4" Description="Ngũ Độc giáo" TypeDesc="Độc công tầm xa" DiffRate="4" Icon="Btn_Class_NguDoc" ActiveIcon="Btn_Class_NguDoc_Active" Logo="Title_NguDoc" VideoBundle="Resources/Video/Intro_NguDoc.unity3d" Video="Intro_NguDoc" />
+  <Faction ID="5" Description="Nga My phái" TypeDesc="Nội công hồi phục" DiffRate="2" Icon="Btn_Class_NgaMy" ActiveIcon="Btn_Class_NgaMy_Active" Logo="Title_NgaMy" VideoBundle="Resources/Video/Intro_NgaMy.unity3d" Video="Intro_NgaMy" />
+  <Faction ID="6" Description="Thúy Yên môn" TypeDesc="Nội công tàng hình" DiffRate="3" Icon="Btn_Class_ThuyYen" ActiveIcon="Btn_Class_ThuyYen_Active" Logo="Title_ThuyYen" VideoBundle="Resources/Video/Intro_ThuyYen.unity3d" Video="Intro_ThuyYen" />
+  <Faction ID="7" Description="Cái Bang" TypeDesc="Ngoại/Nội công" DiffRate="3" Icon="Btn_Class_CaiBang" ActiveIcon="Btn_Class_CaiBang_Active" Logo="Title_CaiBang" VideoBundle="Resources/Video/Intro_CaiBang.unity3d" Video="Intro_CaiBang" />
+  <Faction ID="8" Description="Thiên Nhẫn giáo" TypeDesc="Hỏa công bùa chú" DiffRate="4" Icon="Btn_Class_ThienNhan" ActiveIcon="Btn_Class_ThienNhan_Active" Logo="Title_ThienNhan" VideoBundle="Resources/Video/Intro_ThienNhan.unity3d" Video="Intro_ThienNhan" />
+  <Faction ID="9" Description="Võ Đang phái" TypeDesc="Khí võ nội công" DiffRate="3" Icon="Btn_Class_VoDang" ActiveIcon="Btn_Class_VoDang_Active" Logo="Title_VoDang" VideoBundle="Resources/Video/Intro_VoDang.unity3d" Video="Intro_VoDang" />
+  <Faction ID="10" Description="Côn Lôn phái" TypeDesc="Đao/Kiếm nội ngoại" DiffRate="4" Icon="Btn_Class_ConLon" ActiveIcon="Btn_Class_ConLon_Active" Logo="Title_ConLon" VideoBundle="Resources/Video/Intro_ConLon.unity3d" Video="Intro_ConLon" />
+  <Faction ID="11" Description="Hoa Sơn phái" TypeDesc="Kiếm tông khí tông" DiffRate="4" Icon="Btn_Class_HoaSon" ActiveIcon="Btn_Class_HoaSon_Active" Logo="Title_HoaSon" VideoBundle="Resources/Video/Intro_HoaSon.unity3d" Video="Intro_HoaSon" />
+</FactionIntros>

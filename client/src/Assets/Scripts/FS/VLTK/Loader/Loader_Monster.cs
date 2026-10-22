@@ -85,6 +85,7 @@ namespace FS.VLTK.Loader
         /// <param name="byteData"></param>
         public static void LoadMonsterActionSetSound(byte[] byteData)
         {
+            if (byteData == null || byteData.Length == 0) return;
             byte[] bytes = byteData;
 
             int i = 0;

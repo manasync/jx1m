@@ -35,12 +35,24 @@ using (var scope = app.Services.CreateScope())
             strURL = "127.0.0.1",
             nServerPort = 3001,
             nOnlineNum = 0,
-            nStatus = 1,
+            nStatus = 4, // 4 = Good / Online, 1 = Maintenance
             isTestServer = 3,
             HttpServicePort = 8889,
             strMaintainTxt = "Máy chủ hoạt động bình thường"
         });
         db.SaveChanges();
+    }
+    else
+    {
+        var serversToFix = db.GameServers.Where(s => s.nStatus == 1).ToList();
+        if (serversToFix.Any())
+        {
+            foreach (var s in serversToFix)
+            {
+                s.nStatus = 4;
+            }
+            db.SaveChanges();
+        }
     }
 
     if (!db.LoginAccounts.Any())
@@ -262,7 +274,7 @@ async Task<IResult> HandleServerList(HttpContext ctx, SdkDbContext db)
             strURL = s.strURL ?? "127.0.0.1",
             nServerPort = s.nServerPort ?? 3001,
             nOnlineNum = s.nOnlineNum ?? 0,
-            nStatus = s.nStatus ?? 1,
+            nStatus = s.nStatus ?? 4,
             strMaintainTxt = s.strMaintainTxt ?? "",
             Msg = s.strMaintainTxt ?? "",
             strMaintainStarTime = s.strMaintainStarTime?.ToString() ?? "",

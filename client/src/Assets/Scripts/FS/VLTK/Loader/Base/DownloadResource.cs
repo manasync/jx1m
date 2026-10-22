@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using FS.VLTK.Entities;
 using System;
 using System.Collections;
@@ -86,52 +86,51 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         private IEnumerator ReadLocalUpdateListFile()
         {
-            /// Đường dẫn
-            string fullPath = Global.WebPath(MainGame.GameInfo.FileUpdateURL);
-            /*
-            /// Nếu không có File
-            if (!Utils.IsFileExist(fullPath))
+            string diskPath = PathUtils.NormalizeLocalPath(PathUtils.SteamingAssetsPath(MainGame.GameInfo.FileUpdateURL));
+            if (File.Exists(diskPath))
             {
-                /// Lấy đường dẫn nằm nội bộ trong App
-                fullPath = PathUtils.SteamingAssetsPath_DontUseThis(MainGame.GameInfo.FileUpdateURL);
-                /// Nếu vẫn không tồn tại File
-                if (!Utils.IsFileExist(fullPath))
+                try
+                {
+                    string strText = File.ReadAllText(diskPath);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    this.localUpdateList = UpdateFiles.Parse(XElement.Parse(strText));
+                    yield break;
+                }
+                catch (Exception ex)
+                {
+                    UnityEngine.Debug.LogWarning("[DownloadResource] ReadLocalUpdateListFile disk error: " + ex);
+                }
+            }
+
+            string fullPath = Global.WebPath(MainGame.GameInfo.FileUpdateURL);
+            using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
+            {
+                yield return request.SendWebRequest();
+
+                if (!string.IsNullOrEmpty(request.error))
                 {
                     yield break;
                 }
-            }
-            */
 
-            /// Nội dung File
-            UnityWebRequest request = new UnityWebRequest(fullPath);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            /// Gửi yêu cầu
-            yield return request.SendWebRequest();
-
-            /// Nếu có lỗi gì đó
-            if (!string.IsNullOrEmpty(request.error))
-            {
-                yield break;
-            }
-
-            try
-            {
-                /// Chuỗi Byte kết quả
-                byte[] byteData = request.downloadHandler.data;
-                /// Chuyển thành chuỗi XML tương ứng
-                string strText = new UTF8Encoding().GetString(byteData);
-                /// Loại ký tự thừa ở đầu
-                string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-                if (strText.StartsWith(_byteOrderMarkUtf8))
+                try
                 {
-                    strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    byte[] byteData = request.downloadHandler.data;
+                    string strText = new UTF8Encoding().GetString(byteData);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    this.localUpdateList = UpdateFiles.Parse(XElement.Parse(strText));
                 }
-                /// Đọc dữ liệu
-                this.localUpdateList = UpdateFiles.Parse(XElement.Parse(strText));
-            }
-            catch (Exception ex)
-            {
-                this.Faild?.Invoke(ex.ToString());
+                catch (Exception ex)
+                {
+                    this.Faild?.Invoke(ex.ToString());
+                }
             }
         }
 
@@ -141,36 +140,34 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         private IEnumerator ReadServerUpdateListFile()
         {
-            /// Đường dẫn
-            string fullPath = string.Format("{0}{1}/{2}", MainGame.GameInfo.URL, Global.GetDeviceForWebURL(), MainGame.GameInfo.FileUpdateURL);
-            /// Yêu cầu tải
-            UnityWebRequest request = new UnityWebRequest(fullPath);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            /// Gửi yêu cầu
-            yield return request.SendWebRequest();
+            string baseUrl = MainGame.GameInfo.URL;
+            if (!baseUrl.EndsWith("/")) baseUrl += "/";
+            string device = Global.GetDeviceForWebURL();
+            if (!string.IsNullOrEmpty(device)) baseUrl += device + "/";
+            string fullPath = baseUrl + MainGame.GameInfo.FileUpdateURL;
 
-            /// Nếu có lỗi gì đó
-            if (!string.IsNullOrEmpty(request.error))
+            using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
             {
-                yield break;
-            }
+                yield return request.SendWebRequest();
 
-            try
-            {
-                /// Chuỗi Byte kết quả
-                byte[] byteData = request.downloadHandler.data;
-                /// TODO-Giải mã
-                string strText = new UTF8Encoding().GetString(byteData);
-                /// Loại ký tự thừa ở đầu
-                string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-                if (strText.StartsWith(_byteOrderMarkUtf8))
+                if (!string.IsNullOrEmpty(request.error))
                 {
-                    strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    yield break;
                 }
-                /// Đọc dữ liệu
-                this.serverUpdateList = UpdateFiles.Parse(XElement.Parse(strText));
+
+                try
+                {
+                    byte[] byteData = request.downloadHandler.data;
+                    string strText = new UTF8Encoding().GetString(byteData);
+                    string _byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                    if (strText.StartsWith(_byteOrderMarkUtf8))
+                    {
+                        strText = strText.Replace(_byteOrderMarkUtf8, "");
+                    }
+                    this.serverUpdateList = UpdateFiles.Parse(XElement.Parse(strText));
+                }
+                catch (Exception) { }
             }
-            catch (Exception) { }
         }
 
         /// <summary>

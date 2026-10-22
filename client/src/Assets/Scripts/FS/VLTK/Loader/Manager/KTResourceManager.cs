@@ -186,11 +186,13 @@ namespace FS.VLTK.Factory
                             /// Đường dẫn chứa Asset Bundle
                             string url = Global.WebPath(string.Format("Data/{0}", item.Name));
 #if UNITY_IOS || UNITY_EDITOR
-                            if (url.Contains("file:///"))
-							{
-                                url = url.Replace("file:///", "");
-							}
+                            url = PathUtils.NormalizeLocalPath(url);
 #endif
+                            if (!System.IO.File.Exists(url))
+                            {
+                                this.WaitToBeLoadedItemsByName.Remove(item.Name);
+                                break;
+                            }
                             AssetBundleCreateRequest bundleLoadRequest = AssetBundle.LoadFromFileAsync(url);
                             bundleLoadRequest.completed += (op) => {
                                 /// AssetBundle tương ứng
@@ -442,6 +444,10 @@ namespace FS.VLTK.Factory
         /// <returns></returns>
         public bool HasBundle(string bundleName)
         {
+            if (string.IsNullOrEmpty(bundleName))
+            {
+                return false;
+            }
             return this.Cache_AssetBundles.TryGetValue(bundleName, out _);
         }
 
@@ -453,16 +459,16 @@ namespace FS.VLTK.Factory
         /// <param name="cacheType"></param>
         private void AddAssetBundle(string bundleName, AssetBundle assetBundle, KTResourceCacheType cacheType = KTResourceCacheType.CachedUntilChangeScene)
         {
+            if (string.IsNullOrEmpty(bundleName) || assetBundle == null)
+            {
+                return;
+            }
+
             /// Nếu đã tồn tại trong hệ thống thì bỏ qua
             if (this.Cache_AssetBundles.TryGetValue(bundleName, out _))
             {
                 this.Cache_AssetBundles[bundleName].ReferenceCount++;
                 this.Cache_AssetBundles[bundleName].UnloadTick = this.BundleKeepTick;
-                return;
-            }
-            /// Nếu AssetBundle NULL
-            else if (assetBundle == null)
-            {
                 return;
             }
 
@@ -487,6 +493,10 @@ namespace FS.VLTK.Factory
         /// <returns></returns>
         public AssetBundle GetAssetBundle(string bundleName)
         {
+            if (string.IsNullOrEmpty(bundleName))
+            {
+                return null;
+            }
             this.Cache_AssetBundles.TryGetValue(bundleName, out KTAssetBundle bundle);
             if (bundle == null)
             {
@@ -508,6 +518,10 @@ namespace FS.VLTK.Factory
         /// <param name="cacheType"></param>
         public void LoadAssetBundle(string bundleDir, bool isEncrypted = false, KTResourceCacheType cacheType = KTResourceCacheType.CachedUntilChangeScene)
         {
+            if (string.IsNullOrEmpty(bundleDir))
+            {
+                return;
+            }
             /// Nếu đã tồn tại trong hệ thống
             if (this.HasBundle(bundleDir))
             {
@@ -526,11 +540,12 @@ namespace FS.VLTK.Factory
                 string url = Global.WebPath(string.Format("Data/{0}", bundleDir));
 
 #if UNITY_IOS || UNITY_EDITOR
-                if (url.Contains("file:///"))
-				{
-                    url = url.Replace("file:///", "");
-				}
+                url = PathUtils.NormalizeLocalPath(url);
 #endif
+                if (!System.IO.File.Exists(url))
+                {
+                    return;
+                }
                 /// AssetBundle tương ứng
                 AssetBundle assetBundle = AssetBundle.LoadFromFile(url);
 
@@ -548,6 +563,10 @@ namespace FS.VLTK.Factory
         /// <param name="cacheType"></param>
         public IEnumerator LoadAssetBundleAsync(string bundleDir, bool isEncrypted = false, KTResourceCacheType cacheType = KTResourceCacheType.CachedUntilChangeScene)
         {
+            if (string.IsNullOrEmpty(bundleDir))
+            {
+                yield break;
+            }
             /// Nếu đã tồn tại trong hệ thống
             if (this.HasBundle(bundleDir))
             {
@@ -834,10 +853,6 @@ namespace FS.VLTK.Factory
             /// Nếu Bundle chưa tồn tại trong hệ thống thì bỏ qua
             if (!this.HasBundle(bundleName))
             {
-                string msg = string.Format("Load asset {0} from bundle {1} error -> No corresponding Bundle found.", assetName, bundleName);
-                KTDebug.LogError(msg);
-
-                /// Thoát
                 return false;
             }
 
@@ -989,10 +1004,6 @@ namespace FS.VLTK.Factory
             /// Nếu không tồn tại Bundle tương ứng trong hệ thống
             if (!this.HasBundle(bundleName))
             {
-                string msg = string.Format("Load asset {0} from bundle {1} error -> No corresponding Bundle found.", assetName, bundleName);
-                KTDebug.LogError(msg);
-
-                /// Thoát
                 return false;
             }
 

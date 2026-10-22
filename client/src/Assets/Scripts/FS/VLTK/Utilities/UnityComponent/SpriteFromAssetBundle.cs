@@ -180,7 +180,6 @@ namespace FS.VLTK.Utilities.UnityUI
                     image.sprite = KTUIResourceManager.Instance.GetSprite(Consts.UI_DIR + "/" + this._BundleDir, this._AtlasName, this._SpriteName);
                     if (image.sprite == null)
                     {
-                        KTDebug.LogError("Không có ảnh: " + this.gameObject.name);
                         return;
                     }
 
@@ -199,7 +198,6 @@ namespace FS.VLTK.Utilities.UnityUI
                     renderer.sprite = KTUIResourceManager.Instance.GetSprite(Consts.RESOURCES_DIR + "/" + this._BundleDir, this._AtlasName, this._SpriteName);
                     if (renderer.sprite == null)
                     {
-                        KTDebug.LogError("Không có ảnh: " + this.gameObject.name);
                         return;
                     }
 
