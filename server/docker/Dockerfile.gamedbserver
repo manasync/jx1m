@@ -1,0 +1,25 @@
+# Stage 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+
+COPY server/src/GameDBServer/GameDBServer/GameDBServer.csproj server/src/GameDBServer/GameDBServer/
+RUN dotnet restore server/src/GameDBServer/GameDBServer/GameDBServer.csproj
+
+COPY server/src/GameDBServer/GameDBServer/ server/src/GameDBServer/GameDBServer/
+WORKDIR /src/server/src/GameDBServer/GameDBServer
+RUN dotnet publish -c Release -o /app/publish
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/runtime:6.0 AS runtime
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends sed && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /app/publish .
+COPY server/src/GameDBServer/GameDBServer/AppConfig.xml .
+COPY server/docker/entrypoint-gamedbserver.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 23001
+
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,0 +1,45 @@
+# Stage 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+
+# Copy project files for restore
+COPY server/src/GameServer/KTGameServer/Tmsk.Contract/Tmsk.Contract.csproj server/src/GameServer/KTGameServer/Tmsk.Contract/
+COPY server/src/GameServer/KTGameServer/GameServer/GameServer.csproj server/src/GameServer/KTGameServer/GameServer/
+COPY server/src/GameServer/KTGameServer/libs/ server/src/GameServer/KTGameServer/libs/
+
+RUN dotnet restore server/src/GameServer/KTGameServer/GameServer/GameServer.csproj
+
+# Copy source and publish
+COPY server/src/GameServer/KTGameServer/Tmsk.Contract/ server/src/GameServer/KTGameServer/Tmsk.Contract/
+COPY server/src/GameServer/KTGameServer/GameServer/ server/src/GameServer/KTGameServer/GameServer/
+
+WORKDIR /src/server/src/GameServer/KTGameServer/GameServer
+RUN dotnet publish -c Release -o /app/publish
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/runtime:6.0 AS runtime
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends sed && rm -rf /var/lib/apt/lists/*
+
+# Copy binaries
+COPY --from=build /app/publish .
+
+# Copy runtime game data and configurations
+COPY server/bin/GameServer/AppConfig.xml .
+COPY server/bin/GameServer/Policy.xml .
+COPY server/bin/GameServer/MapConfig.xml .
+COPY server/bin/GameServer/ServerConfig.xml .
+COPY server/bin/GameServer/NameServer.xml .
+COPY server/bin/GameServer/GMList.xml .
+COPY server/bin/GameServer/Enum.txt .
+COPY server/bin/GameServer/Config ./Config
+COPY server/bin/GameServer/LuaScripts ./LuaScripts
+
+COPY server/docker/entrypoint-gameserver.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Client TCP game port & HTTP API port
+EXPOSE 3001 8889
+
+ENTRYPOINT ["/entrypoint.sh"]

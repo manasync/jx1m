@@ -892,3 +892,12 @@ CREATE TABLE `t_welfare`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Records of t_config
+-- ----------------------------
+INSERT INTO `t_config` (`paramname`, `paramvalue`) VALUES ('flag_t_roles_auto_increment', '200000');
+INSERT INTO `t_config` (`paramname`, `paramvalue`) VALUES ('money-to-yuanbao', '10');
+INSERT INTO `t_config` (`paramname`, `paramvalue`) VALUES ('flag_t_goods_delete_immediately', '1');
+INSERT INTO `t_config` (`paramname`, `paramvalue`) VALUES ('query_total_usermoney_minute', '60');
+INSERT INTO `t_config` (`paramname`, `paramvalue`) VALUES ('opt_roleparams', '1');

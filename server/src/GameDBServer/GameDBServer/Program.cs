@@ -146,7 +146,7 @@ namespace GameDBServer
         /// </summary>
         public static void DeleteFile(String strFileName)
         {
-            String strFullFileName = System.IO.Directory.GetCurrentDirectory() + "\\" + strFileName;
+            String strFullFileName = System.IO.Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + strFileName;
             if (File.Exists(strFullFileName))
             {
                 FileInfo fi = new FileInfo(strFullFileName);
@@ -164,7 +164,7 @@ namespace GameDBServer
         /// </summary>
         public static void WritePIDToFile(String strFile)
         {
-            String strFileName = System.IO.Directory.GetCurrentDirectory() + "\\" + strFile;
+            String strFileName = System.IO.Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + strFile;
 
             Process processes = Process.GetCurrentProcess();
             int nPID = processes.Id;
@@ -260,7 +260,14 @@ namespace GameDBServer
             /// Chừng nào còn chạy
             while (!NeedExitServer)
             {
-                if (null == cmd || 0 == cmd.CompareTo("exit"))
+                if (string.IsNullOrEmpty(cmd))
+                {
+                    Thread.Sleep(1000);
+                    cmd = System.Console.ReadLine();
+                    continue;
+                }
+
+                if (0 == cmd.CompareTo("exit"))
                 {
                     if (ServerConsole.CanExit())
                     {

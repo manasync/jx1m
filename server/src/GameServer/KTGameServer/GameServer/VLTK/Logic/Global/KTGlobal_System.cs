@@ -29,7 +29,26 @@ namespace GameServer.KiemThe
         /// <returns></returns>
         public static string GetDataPath(string uri)
         {
-            return string.Format("Config/{0}", uri);
+            string fullPath = string.Format("Config/{0}", uri);
+            if (System.IO.File.Exists(fullPath) || System.IO.Directory.Exists(fullPath))
+            {
+                return fullPath;
+            }
+
+            try
+            {
+                string dir = System.IO.Path.GetDirectoryName(fullPath);
+                string fileName = System.IO.Path.GetFileName(fullPath);
+                if (System.IO.Directory.Exists(dir))
+                {
+                    var files = System.IO.Directory.GetFiles(dir);
+                    var match = System.Linq.Enumerable.FirstOrDefault(files, f => string.Equals(System.IO.Path.GetFileName(f), fileName, System.StringComparison.OrdinalIgnoreCase));
+                    if (match != null) return match;
+                }
+            }
+            catch { }
+
+            return fullPath;
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace Server.Tools
 
         static DataHelper()
         {
-            CurrentDirectory = Directory.GetCurrentDirectory() + "\\";
+            CurrentDirectory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
 
             byte[] keyBytes = BitConverter.GetBytes((int)1695843216);
             for (int i = 0; i < keyBytes.Length; i++)

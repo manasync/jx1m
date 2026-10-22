@@ -202,8 +202,17 @@ app.MapPost("/RegisterSDK.aspx", async (HttpContext ctx, SdkDbContext db) =>
 // ==========================================
 async Task<IResult> HandleServerList(HttpContext ctx, SdkDbContext db)
 {
-    var form = await ctx.Request.ReadFormAsync();
-    string strUID = form["strUID"].ToString() ?? "0";
+    string strUID = "0";
+    if (ctx.Request.HasFormContentType)
+    {
+        var form = await ctx.Request.ReadFormAsync();
+        strUID = form["strUID"].ToString() ?? "0";
+    }
+    else if (ctx.Request.Query.ContainsKey("strUID"))
+    {
+        strUID = ctx.Request.Query["strUID"].ToString() ?? "0";
+    }
+
     int userId = 0;
     if (strUID.Contains('_'))
         int.TryParse(strUID.Split('_')[0], out userId);
@@ -252,9 +261,9 @@ async Task<IResult> HandleServerList(HttpContext ctx, SdkDbContext db)
     return Results.Bytes(ToProtoBytes(serverDataEx), "application/octet-stream");
 }
 
-app.MapPost("/GetServerList.aspx", HandleServerList);
-app.MapPost("/GetServerListTest.aspx", HandleServerList);
-app.MapPost("/GetServerListLocalHost.aspx", HandleServerList);
+app.MapMethods("/GetServerList.aspx", new[] { "GET", "POST" }, HandleServerList);
+app.MapMethods("/GetServerListTest.aspx", new[] { "GET", "POST" }, HandleServerList);
+app.MapMethods("/GetServerListLocalHost.aspx", new[] { "GET", "POST" }, HandleServerList);
 
 // ==========================================
 // 4. VerifyAccount.aspx

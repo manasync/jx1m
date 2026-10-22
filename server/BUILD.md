@@ -1,32 +1,93 @@
-# Build server (project tái tạo)
+# Hướng Dẫn Vận Hành Server Kiếm Thế Mobile (JX1M) - Modern .NET 6 & Docker
 
-`.sln`/`.csproj` gốc không có trong source nên đã được **tạo lại** (SDK-style, .NET Framework).
-Build trên **Windows + Visual Studio 2019/2022** (hoặc `msbuild`). macOS/Linux không build được .NET Framework.
+Toàn bộ hệ thống server JX1M đã được chuyển đổi hoàn toàn sang **.NET 6 đa nền tảng** (chạy natively trên macOS / Linux / Windows / Docker). Không còn phụ thuộc vào Windows, IIS hay .NET Framework 4.7.2/4.8.
 
-## Solution
+---
 
-| Solution | Project | Loại | TFM |
+## 1. Kiến trúc hệ sinh thái Server
+
+| Dịch vụ | Ngôn ngữ / Nền tảng | Port | Mô tả vai trò |
 |---|---|---|---|
-| `src/GameServer/KTGameServer/KTGameServer.sln` | Tmsk.Contract | library | net472 |
-| | KF.CenterServer.Remoting | library | net472 |
-| | KF.CenterServer.Hosting | exe | net472 |
-| | GameServer | exe | net472 |
-| `src/GameDBServer/GameDBServer.sln` | GameDBServer | exe (x64) | net48 |
+| **`mysql` (MariaDB)** | MariaDB 10.5 | `3306` | Cơ sở dữ liệu game (`gamedb`), quản lý nhân vật, trang bị, tiền tệ |
+| **`KiemTheWebSDK`** | ASP.NET Core Minimal API (.NET 6) | `8081` (hoặc `81`) | API xác thực tài khoản, đăng ký, đăng nhập, nạp thẻ, kích hoạt giftcode |
+| **`GameDBServer`** | C# .NET 6 (Console) | `23001` | Trung gian truy xuất CSDL MySQL cho GameServer qua socket TCP nhị phân |
+| **`GameServer`** | C# .NET 6 (Console) | `3001` (TCP game), `8889` (HTTP) | Logic game thế giới Kiếm Thế, bản đồ, chiến trường, quái, bang hội |
 
-Thứ tự phụ thuộc (VS tự lo): `Tmsk.Contract` → `KF.CenterServer.Remoting` → `KF.CenterServer.Hosting`; `GameServer` → `Tmsk.Contract`.
+---
 
-## Cách build
-1. Mở `.sln` bằng Visual Studio → chuột phải solution → **Restore NuGet Packages**.
-2. Build. NuGet deps tải từ nuget.org; DLL cục bộ (Tmsk.Tools, Neo.Lua, UnityEngine, MoonSharp, MySQLDriverCS, IBatisNet, EnterpriseLibrary, SQLite) tham chiếu qua HintPath tới file có sẵn.
+## 2. Cách chạy bằng Docker (Khuyến nghị)
 
-## Caveat (đọc trước khi kêu lỗi)
-- **Không compile-verify được lúc tạo** (máy tạo là macOS). Có thể còn thiếu vài `<Reference Include="System.*">` — VS sẽ báo đỏ, thêm vào là xong.
-- **`.cs` gom tự động** (`**/*.cs`). Nếu project gốc từng loại trừ file nào thì phải `<Compile Remove="...">`.
-- **LogDBServer KHÔNG có source** — chỉ còn config/log. Không tạo được project. Muốn chạy thì phục hồi exe prebuilt:
-  `git checkout HEAD -- server/bin/LogDBServer`
-- **Bitness native**: `libmysql.dll` (KF.CenterServer.Remoting) và `libMySQL.dll` (GameDBServer) phụ thuộc x86/x64. GameDBServer đã ép `x64`. Nếu KF.Remoting lỗi nạp libmysql, đặt Platform x86/x64 cho khớp file DLL.
-- `Tmsk.Tools.dll` được **khôi phục từ git** vào `src/GameServer/KTGameServer/libs/` (trước nằm trong bin đã xoá).
-- DLL prebuilt cũ đã bị xoá khi clear build — build lại sẽ sinh mới trong `bin/`.
+Toàn bộ các dịch vụ được đóng gói sẵn trong `docker-compose.yml`.
 
-## Nhắc lại (từ bước trước)
-Đã đổi về placeholder, cần điền lại trước khi chạy thật: connection string DB (`app.config`), URL SDK nạp thẻ (`GameManager.cs`), KuaFu URI, và bật lại Telegram/telemetry nếu muốn (đã gỡ).
+### Khởi động cụm server:
+```bash
+./scripts/run_docker.sh
+```
+Hoặc dùng lệnh docker compose trực tiếp:
+```bash
+docker compose up -d
+```
+
+### Xem log thời gian thực:
+```bash
+docker compose logs -f
+# Hoặc xem log dịch vụ cụ thể:
+docker compose logs -f gameserver
+docker compose logs -f gamedbserver
+docker compose logs -f websdk
+```
+
+### Dừng cụm server:
+```bash
+./scripts/stop_docker.sh
+# Hoặc:
+docker compose down
+```
+
+---
+
+## 3. Cách chạy trực tiếp trên máy chủ (Host / Native)
+
+Dành cho môi trường phát triển local hoặc debug không cần qua container.
+
+### Yêu cầu:
+- .NET 6 SDK (`dotnet --version` >= 6.0)
+- Cơ sở dữ liệu MySQL/MariaDB chạy tại `127.0.0.1:3306` đã import file `server/db/gamedb.sql` (User: `root`, Password: `123456`, DB: `gamedb`).
+
+### Khởi động:
+```bash
+./scripts/run_local.sh
+```
+
+### Dừng:
+```bash
+./scripts/stop_local.sh
+```
+
+### Build thủ công từng thành phần:
+```bash
+# 1. Build GameDBServer
+dotnet build server/src/GameDBServer/GameDBServer/GameDBServer.csproj -c Release
+
+# 2. Build GameServer
+dotnet build server/src/GameServer/KTGameServer/KTGameServer.sln -c Release
+
+# 3. Build Web SDK
+dotnet build server/src/WEB/KiemTheWebSDK/KiemTheWebSDK.csproj -c Release
+```
+
+---
+
+## 4. Kiểm thử kết nối và tài khoản mẫu
+
+Khi khởi động Web SDK lần đầu, hệ thống tự động khởi tạo cơ sở dữ liệu SQLite tại `/app/data/kiemthe_sdk.db` và nạp sẵn dữ liệu mặc định:
+
+1. **Tài khoản test**:
+   - Tên đăng nhập: `test1`
+   - Mật khẩu: `123456`
+2. **Máy chủ mặc định**:
+   - Tên máy chủ: `Biện Kinh 1`
+   - Địa chỉ: `127.0.0.1:3001`
+3. **Endpoint kiểm tra trạng thái**:
+   - `curl http://localhost:8081/health` ➔ `{"status":"healthy"}`
+   - `curl http://localhost:8081/` ➔ Danh sách endpoint SDK

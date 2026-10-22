@@ -38,5 +38,5 @@
 	<Threading MaxUpdateGridThread="5" MaxPlayerStoryBoardThread="5" MaxMonsterTimer="5" MaxBuffTimer="1" MaxPetTimer="3" MaxTraderCarriageTimer="1" MaxBotTimer="1" />
 	<GameConfig LimitLevel="200" MonsterKilledToSpawnElite="300" MonsterKilledToSpawnLeader="600" MaxFireCampAndElitePerZone="2" />
 	<Captcha EnableCaptcha="false" EnableCaptchaForIOS="false" CaptchaAppearMinPeriod="30000" CaptchaAppearMaxPeriod="36000" CaptchaTeamPlayersOnly="false" CaptchaAppearFromTime="9:00" CaptchaAppearToTime="23:59" CaptchaExpAddPerLevel="500" CaptchaBoundMoneyAddPerLevel="100" />
-	<CrossServer EnableCrossServer="true" />
+	<CrossServer EnableCrossServer="false" />
 </ServerConfig>

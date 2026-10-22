@@ -97,7 +97,13 @@ namespace GameServer.Server
 
                 ServerIP = ip;
                 ServerPort = port;
-                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+                System.Net.IPAddress ipAddress;
+                if (!System.Net.IPAddress.TryParse(ip, out ipAddress))
+                {
+                    var addresses = System.Net.Dns.GetHostAddresses(ip);
+                    ipAddress = System.Linq.Enumerable.FirstOrDefault(addresses, a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) ?? addresses[0];
+                }
+                IPEndPoint remoteEndPoint = new IPEndPoint(ipAddress, port);
                 _Socket = new TMSKSocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 _Socket.SendTimeout = 30 * 1000;//设置TMSKSocket的接收超时时间为30S。

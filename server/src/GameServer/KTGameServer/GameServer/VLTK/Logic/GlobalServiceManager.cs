@@ -77,8 +77,7 @@ namespace GameServer.Logic
 
                         if (GameManager.ServerStarting && !success)
                         {
-                            LogManager.WriteLog(LogTypes.Fatal, string.Format("Gloal Servicie initialize Bug0}!", m.GetType()));
-                            Console.ReadKey();
+                            LogManager.WriteLog(LogTypes.Fatal, string.Format("Global Service initialize Error: {0}!", m.GetType()));
                         }
                     }
                 }

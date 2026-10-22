@@ -129,7 +129,7 @@ namespace GameServer
         /// </summary>
         public static void DeleteFile(String strFileName)
         {
-            String strFullFileName = System.IO.Directory.GetCurrentDirectory() + "\\" + strFileName;
+            String strFullFileName = System.IO.Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + strFileName;
             if (File.Exists(strFullFileName))
             {
                 FileInfo fi = new FileInfo(strFullFileName);
@@ -147,7 +147,7 @@ namespace GameServer
         /// </summary>
         public static void WritePIDToFile(String strFile)
         {
-            String strFileName = System.IO.Directory.GetCurrentDirectory() + "\\" + strFile;
+            String strFileName = System.IO.Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + strFile;
 
             Process processes = Process.GetCurrentProcess();
             int nPID = processes.Id;
@@ -238,13 +238,17 @@ namespace GameServer
                     {
                         SysConOut.WriteLine("Press Y to Exit Server?");
                         cmd = System.Console.ReadLine();
-                        if (0 == cmd.CompareTo("y"))
+                        if (cmd != null && 0 == cmd.CompareTo("y"))
                         {
                             break;
                         }
                     }
 
                     ParseInputCmd(cmd);
+                }
+                else
+                {
+                    Thread.Sleep(1000);
                 }
             }
 

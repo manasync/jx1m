@@ -27,7 +27,7 @@ namespace GameServer.KiemThe.LuaSystem
         public static void Init()
         {
             // Automatically register all MoonSharpUserData types
-            UserData.RegisterAssembly();
+            UserData.RegisterAssembly(typeof(KTLuaEnvironment).Assembly);
             //KTLuaEnvironment.LuaEnv.Options.CheckThreadAccess = false;
 
             KTLuaEnvironment.LuaEnv.Globals["System"] = typeof(KTLuaLib_System);

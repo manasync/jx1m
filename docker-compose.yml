@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mariadb:10.5
+    container_name: jx1m-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "gamedb"
+    volumes:
+      - ./server/db/gamedb.sql:/docker-entrypoint-initdb.d/01_gamedb.sql:ro
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  websdk:
+    build:
+      context: .
+      dockerfile: server/docker/Dockerfile.websdk
+    container_name: jx1m-websdk
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+      - "81:8081"
+    volumes:
+      - websdk_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  gamedbserver:
+    build:
+      context: .
+      dockerfile: server/docker/Dockerfile.gamedbserver
+    container_name: jx1m-gamedbserver
+    restart: unless-stopped
+    environment:
+      DB_HOST: "mysql"
+      DB_PORT: "3306"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "23001:23001"
+
+  gameserver:
+    build:
+      context: .
+      dockerfile: server/docker/Dockerfile.gameserver
+    container_name: jx1m-gameserver
+    restart: unless-stopped
+    environment:
+      DB_SERVER_HOST: "gamedbserver"
+      DB_SERVER_PORT: "23001"
+      WEBSDK_HOST: "websdk"
+      WEBSDK_PORT: "8081"
+    depends_on:
+      - gamedbserver
+      - websdk
+    ports:
+      - "3001:3001"
+      - "8889:8889"
+
+volumes:
+  mysql_data:
+  websdk_data:

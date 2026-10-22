@@ -1,0 +1,8 @@
+.git
+client
+server_backup_*
+server/src/**/bin
+server/src/**/obj
+server/src/**/packages
+*.tmp
+*.log
