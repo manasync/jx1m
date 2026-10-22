@@ -83,6 +83,36 @@ static T FromProtoBytes<T>(byte[] data)
     return Serializer.Deserialize<T>(ms);
 }
 
+// Enable Static Files serving for local CDN (/res)
+app.UseStaticFiles(new Microsoft.AspNetCore.Builder.StaticFileOptions
+{
+    ServeUnknownFileTypes = true
+});
+
+app.MapGet("/res/Version.xml", () => {
+    string p = File.Exists("/app/wwwroot/res/Version.xml") ? "/app/wwwroot/res/Version.xml" : "client/src/Assets/StreamingAssets/Version.xml";
+    if (File.Exists(p)) return Results.File(Path.GetFullPath(p), "application/xml");
+    return Results.NotFound();
+});
+
+app.MapGet("/res/UpdateList.xml", () => {
+    string p = File.Exists("/app/wwwroot/res/UpdateList.xml") ? "/app/wwwroot/res/UpdateList.xml" : "client/src/Assets/StreamingAssets/UpdateList.xml";
+    if (File.Exists(p)) return Results.File(Path.GetFullPath(p), "application/xml");
+    return Results.NotFound();
+});
+
+app.MapGet("/res/{device}/Version.xml", (string device) => {
+    string p = File.Exists("/app/wwwroot/res/Version.xml") ? "/app/wwwroot/res/Version.xml" : "client/src/Assets/StreamingAssets/Version.xml";
+    if (File.Exists(p)) return Results.File(Path.GetFullPath(p), "application/xml");
+    return Results.NotFound();
+});
+
+app.MapGet("/res/{device}/UpdateList.xml", (string device) => {
+    string p = File.Exists("/app/wwwroot/res/UpdateList.xml") ? "/app/wwwroot/res/UpdateList.xml" : "client/src/Assets/StreamingAssets/UpdateList.xml";
+    if (File.Exists(p)) return Results.File(Path.GetFullPath(p), "application/xml");
+    return Results.NotFound();
+});
+
 // ==========================================
 // 1. LoginSDK.aspx
 // ==========================================
