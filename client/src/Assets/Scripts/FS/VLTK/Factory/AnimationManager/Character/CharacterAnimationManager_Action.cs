@@ -60,20 +60,76 @@ namespace FS.VLTK.Factory.Animation
         /// <returns></returns>
         public string GetActionName(PlayerActionType actionType, string weaponID, bool isRide)
         {
-            /// Nếu tên động tác theo vũ khí không tồn tại
-            if (!this.ActionNames.TryGetValue(weaponID, out ActionByWeapon actionInfo))
+            /// Nếu tên động tác theo vũ khí tồn tại
+            if (this.ActionNames != null && this.ActionNames.TryGetValue(weaponID, out ActionByWeapon actionInfo))
             {
-                return "";
+                if (actionInfo.Actions != null && actionInfo.Actions.TryGetValue(actionType, out PlayerAction actionName))
+                {
+                    string res = isRide ? actionName.Ride : actionName.Normal;
+                    if (!string.IsNullOrEmpty(res))
+                    {
+                        return res;
+                    }
+                }
             }
 
-            /// Nếu động tác không tồn tại
-            if (!actionInfo.Actions.TryGetValue(actionType, out PlayerAction actionName))
+            // Fallback default action mapping
+            if (isRide)
             {
-                return "";
+                switch (actionType)
+                {
+                    case PlayerActionType.FightStand:
+                    case PlayerActionType.NormalStand:
+                    case PlayerActionType.Sit:
+                    case PlayerActionType.Jump:
+                        return "RideStand";
+                    case PlayerActionType.Walk:
+                        return "RideWalk";
+                    case PlayerActionType.Run:
+                    case PlayerActionType.RunAttack:
+                        return "RideRun";
+                    case PlayerActionType.NormalAttack:
+                    case PlayerActionType.CritAttack:
+                        return "RideCut";
+                    case PlayerActionType.Magic:
+                        return "RideMagic";
+                    case PlayerActionType.Wound:
+                        return "RideWound";
+                    case PlayerActionType.Die:
+                        return "RideDie";
+                    default:
+                        return "RideStand";
+                }
             }
-
-            /// Trả về tên động tác tương ứng
-            return isRide ? actionName.Ride : actionName.Normal;
+            else
+            {
+                switch (actionType)
+                {
+                    case PlayerActionType.FightStand:
+                    case PlayerActionType.NormalStand:
+                        return "FreeStand1";
+                    case PlayerActionType.Walk:
+                        return "FreeWalk";
+                    case PlayerActionType.Run:
+                    case PlayerActionType.RunAttack:
+                        return "FreeRun";
+                    case PlayerActionType.NormalAttack:
+                    case PlayerActionType.CritAttack:
+                        return "FreeAttack";
+                    case PlayerActionType.Magic:
+                        return "FreeMagic";
+                    case PlayerActionType.Wound:
+                        return "FreeWound";
+                    case PlayerActionType.Die:
+                        return "FreeDie";
+                    case PlayerActionType.Sit:
+                        return "SitDown";
+                    case PlayerActionType.Jump:
+                        return "JumpFly";
+                    default:
+                        return "FreeStand1";
+                }
+            }
         }
     }
 }

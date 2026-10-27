@@ -45,8 +45,24 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static AssetBundle LoadAssetBundle(string path, bool isEncrypted)
         {
-            byte[] byteData = null;
             string localPath = PathUtils.NormalizeLocalPath(path);
+            if (File.Exists(localPath))
+            {
+                // 1. Thử load trực tiếp từ file (nhanh, chuẩn và an toàn)
+                try
+                {
+                    AssetBundle directBundle = AssetBundle.LoadFromFile(localPath);
+                    if (directBundle != null)
+                    {
+                        return directBundle;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            byte[] byteData = null;
             if (File.Exists(localPath))
             {
                 byteData = File.ReadAllBytes(localPath);
@@ -80,21 +96,42 @@ namespace FS.VLTK.Loader
                 return null;
             }
 
-            /// Nếu mã hóa thì giải mã
+            // 2. Thử load trực tiếp từ memory gốc (nếu là unencrypted bundle)
+            try
+            {
+                AssetBundle rawBundle = AssetBundle.LoadFromMemory(byteData);
+                if (rawBundle != null)
+                {
+                    return rawBundle;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            // 3. Nếu được đánh dấu mã hóa, clone byte array để tránh in-place corruption
             if (isEncrypted)
             {
                 try
                 {
-                    byteData = KTResourceCrypto.Decrypt(byteData);
+                    byte[] copy = new byte[byteData.Length];
+                    Buffer.BlockCopy(byteData, 0, copy, 0, byteData.Length);
+                    byte[] decrypted = KTResourceCrypto.Decrypt(copy);
+                    if (decrypted != null && decrypted.Length > 0)
+                    {
+                        AssetBundle decryptedBundle = AssetBundle.LoadFromMemory(decrypted);
+                        if (decryptedBundle != null)
+                        {
+                            return decryptedBundle;
+                        }
+                    }
                 }
                 catch (Exception)
                 {
-                    return null;
                 }
             }
 
-            /// Chuyển về AssetBundle
-            return AssetBundle.LoadFromMemory(byteData);
+            return null;
         }
 
         /// <summary>
@@ -179,6 +216,32 @@ namespace FS.VLTK.Loader
             return null;
         }
 
+        private static TextAsset GetTextAssetFromBundle(AssetBundle bundle, string fileName)
+        {
+            if (bundle == null) return null;
+            TextAsset textAsset = bundle.LoadAsset<TextAsset>(fileName);
+            if (textAsset != null) return textAsset;
+
+            string lower = fileName.ToLower();
+            textAsset = bundle.LoadAsset<TextAsset>(lower);
+            if (textAsset != null) return textAsset;
+
+            string justName = Path.GetFileName(fileName);
+            string[] allNames = bundle.GetAllAssetNames();
+            if (allNames != null)
+            {
+                for (int i = 0; i < allNames.Length; i++)
+                {
+                    if (allNames[i].EndsWith(justName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        textAsset = bundle.LoadAsset<TextAsset>(allNames[i]);
+                        if (textAsset != null) return textAsset;
+                    }
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Tải XML từ Bundle
         /// </summary>
@@ -187,16 +250,13 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static XElement LoadXMLFromBundle(AssetBundle bundle, string fileName)
         {
-            if (bundle != null && bundle.Contains(fileName))
+            TextAsset textAsset = GetTextAssetFromBundle(bundle, fileName);
+            if (textAsset != null)
             {
-                TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
-                if (textAsset != null)
-                {
-                    string text = textAsset.text;
-                    Resources.UnloadAsset(textAsset);
-                    GameObject.DestroyImmediate(textAsset, true);
-                    return XElement.Parse(text);
-                }
+                string text = textAsset.text;
+                Resources.UnloadAsset(textAsset);
+                GameObject.DestroyImmediate(textAsset, true);
+                return XElement.Parse(text);
             }
 
             string local = FindLocalFile(fileName);
@@ -224,16 +284,13 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static string LoadTextFileFromBundle(AssetBundle bundle, string fileName)
         {
-            if (bundle != null && bundle.Contains(fileName))
+            TextAsset textAsset = GetTextAssetFromBundle(bundle, fileName);
+            if (textAsset != null)
             {
-                TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
-                if (textAsset != null)
-                {
-                    string text = textAsset.text;
-                    Resources.UnloadAsset(textAsset);
-                    GameObject.DestroyImmediate(textAsset, true);
-                    return text;
-                }
+                string text = textAsset.text;
+                Resources.UnloadAsset(textAsset);
+                GameObject.DestroyImmediate(textAsset, true);
+                return text;
             }
 
             string local = FindLocalFile(fileName);
@@ -260,16 +317,13 @@ namespace FS.VLTK.Loader
         /// <returns></returns>
         public static byte[] LoadBytesFromBundle(AssetBundle bundle, string fileName)
         {
-            if (bundle != null && bundle.Contains(fileName))
+            TextAsset textAsset = GetTextAssetFromBundle(bundle, fileName);
+            if (textAsset != null)
             {
-                TextAsset textAsset = bundle.LoadAsset(fileName) as TextAsset;
-                if (textAsset != null)
-                {
-                    byte[] bytes = textAsset.bytes;
-                    Resources.UnloadAsset(textAsset);
-                    GameObject.DestroyImmediate(textAsset, true);
-                    return bytes;
-                }
+                byte[] bytes = textAsset.bytes;
+                Resources.UnloadAsset(textAsset);
+                GameObject.DestroyImmediate(textAsset, true);
+                return bytes;
             }
 
             string local = FindLocalFile(fileName);

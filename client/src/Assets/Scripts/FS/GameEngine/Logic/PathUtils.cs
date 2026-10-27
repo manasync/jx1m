@@ -106,6 +106,26 @@ namespace FS.GameEngine.Logic
                     url = url.Substring(1);
                 }
             }
+
+            // Fallback: If file doesn't exist, check alternative naming/location (Character <-> PlayerRes, Head <-> Helm)
+            if (!System.IO.File.Exists(url))
+            {
+                if (url.Contains("/Resources/Character/"))
+                {
+                    string alt = url.Replace("/Resources/Character/", "/Resources/PlayerRes/").Replace("/Head/", "/Helm/");
+                    if (System.IO.File.Exists(alt)) return alt;
+                    alt = url.Replace("/Resources/Character/", "/Resources/PlayerRes/");
+                    if (System.IO.File.Exists(alt)) return alt;
+                }
+                else if (url.Contains("/Resources/PlayerRes/"))
+                {
+                    string alt = url.Replace("/Resources/PlayerRes/", "/Resources/Character/").Replace("/Helm/", "/Head/");
+                    if (System.IO.File.Exists(alt)) return alt;
+                    alt = url.Replace("/Resources/PlayerRes/", "/Resources/Character/");
+                    if (System.IO.File.Exists(alt)) return alt;
+                }
+            }
+
             return url;
         }
 

@@ -1,4 +1,4 @@
-﻿using FS.GameEngine.Logic;
+using FS.GameEngine.Logic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -326,17 +326,31 @@ namespace FS.VLTK.Factory
                                 /// Tạo mới danh sách SubAssets
                                 this.Cache_Resources[item.Name].SubAssets = new Dictionary<string, UnityEngine.Object>();
 
-                                /// Nếu có danh sách Asset con
-                                if (request.allAssets != null)
+                                UnityEngine.Object[] allLoaded = request.allAssets;
+                                if (allLoaded == null || allLoaded.Length == 0)
                                 {
+                                    if (this.Cache_AssetBundles.ContainsKey(bundleName) && this.Cache_AssetBundles[bundleName].Bundle != null)
+                                    {
+                                        allLoaded = this.Cache_AssetBundles[bundleName].Bundle.LoadAllAssets(item.ResultType);
+                                    }
+                                }
+
+                                /// Nếu có danh sách Asset con
+                                if (allLoaded != null && allLoaded.Length > 0)
+                                {
+                                    if (this.Cache_Resources.ContainsKey(item.Name) && this.Cache_Resources[item.Name].Asset == null)
+                                    {
+                                        this.Cache_Resources[item.Name].Asset = allLoaded[0];
+                                    }
+
                                     /// Duyệt toàn bộ danh sách Asset con tìm thấy
-                                    for (int i = 0; i < request.allAssets.Length; i++)
+                                    for (int i = 0; i < allLoaded.Length; i++)
                                     {
                                         /// Nếu kiểu thỏa mãn
-                                        if (request.allAssets[i].GetType() == item.ResultType)
+                                        if (allLoaded[i].GetType() == item.ResultType)
                                         {
                                             /// Thêm Asset con vào danh sách
-                                            this.Cache_Resources[item.Name].SubAssets[request.allAssets[i].name] = request.allAssets[i];
+                                            this.Cache_Resources[item.Name].SubAssets[allLoaded[i].name] = allLoaded[i];
                                         }
                                     }
                                 }
@@ -968,7 +982,7 @@ namespace FS.VLTK.Factory
                     this.WaitToBeLoadedItems.Enqueue(new WaitingItem()
                     {
                         Name = fullName,
-                        Type = ItemType.Asset,
+                        Type = ItemType.SubAssets,
                         CacheType = cacheType,
                         ResultType = typeof(T),
                         Params = new List<string>()
@@ -1034,6 +1048,25 @@ namespace FS.VLTK.Factory
                     if (typeof(T) == typeof(Sprite))
                     {
                         Sprite[] sprites = this.Cache_AssetBundles[bundleName].Bundle.LoadAssetWithSubAssets<Sprite>(assetName);
+                        if (sprites == null || sprites.Length <= 0)
+                        {
+                            string[] allAssetNames = this.Cache_AssetBundles[bundleName].Bundle.GetAllAssetNames();
+                            if (allAssetNames != null)
+                            {
+                                for (int i = 0; i < allAssetNames.Length; i++)
+                                {
+                                    sprites = this.Cache_AssetBundles[bundleName].Bundle.LoadAssetWithSubAssets<Sprite>(allAssetNames[i]);
+                                    if (sprites != null && sprites.Length > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (sprites == null || sprites.Length <= 0)
+                        {
+                            sprites = this.Cache_AssetBundles[bundleName].Bundle.LoadAllAssets<Sprite>();
+                        }
                         /// Toác
                         if (sprites == null || sprites.Length <= 0)
                         {
@@ -1054,6 +1087,25 @@ namespace FS.VLTK.Factory
                     else if (typeof(T) == typeof(AudioClip))
                     {
                         AudioClip[] audioClips = this.Cache_AssetBundles[bundleName].Bundle.LoadAssetWithSubAssets<AudioClip>(assetName);
+                        if (audioClips == null || audioClips.Length <= 0)
+                        {
+                            string[] allAssetNames = this.Cache_AssetBundles[bundleName].Bundle.GetAllAssetNames();
+                            if (allAssetNames != null)
+                            {
+                                for (int i = 0; i < allAssetNames.Length; i++)
+                                {
+                                    audioClips = this.Cache_AssetBundles[bundleName].Bundle.LoadAssetWithSubAssets<AudioClip>(allAssetNames[i]);
+                                    if (audioClips != null && audioClips.Length > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (audioClips == null || audioClips.Length <= 0)
+                        {
+                            audioClips = this.Cache_AssetBundles[bundleName].Bundle.LoadAllAssets<AudioClip>();
+                        }
                         /// Toác
                         if (audioClips == null || audioClips.Length <= 0)
                         {
@@ -1074,6 +1126,25 @@ namespace FS.VLTK.Factory
                     else
                     {
                         UnityEngine.Object[] assets = this.Cache_AssetBundles[bundleName].Bundle.LoadAssetWithSubAssets(assetName);
+                        if (assets == null || assets.Length <= 0)
+                        {
+                            string[] allAssetNames = this.Cache_AssetBundles[bundleName].Bundle.GetAllAssetNames();
+                            if (allAssetNames != null)
+                            {
+                                for (int i = 0; i < allAssetNames.Length; i++)
+                                {
+                                    assets = this.Cache_AssetBundles[bundleName].Bundle.LoadAssetWithSubAssets(allAssetNames[i]);
+                                    if (assets != null && assets.Length > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (assets == null || assets.Length <= 0)
+                        {
+                            assets = this.Cache_AssetBundles[bundleName].Bundle.LoadAllAssets<UnityEngine.Object>();
+                        }
                         /// Toác
                         if (assets == null || assets.Length <= 0)
                         {

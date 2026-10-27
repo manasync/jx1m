@@ -62,13 +62,13 @@ namespace FS.VLTK.Control.Component
             Global.Data.CurrentDownloadingMapName = mapResFolderName;
 
             /// Tìm thông tin bản đồ trong File tải tài nguyên tương ứng
-            UpdateZipFile updateFile = MainGame.UpdateFiles.ZipFiles.Where(x => x.FileName == string.Format("Data/Resources/Map/{0}.zip", mapResFolderName)).FirstOrDefault();
-            /// Nếu không tồn tại thì báo lỗi và thoát Game
+            UpdateZipFile updateFile = MainGame.UpdateFiles?.ZipFiles?.Where(x => x.FileName == string.Format("Data/Resources/Map/{0}.zip", mapResFolderName)).FirstOrDefault();
+            /// Nếu không tồn tại file zip trên CDN thì bỏ qua và đọc trực tiếp dữ liệu bản đồ
             if (updateFile == null)
             {
-                KTGlobal.ShowMessageBox("Lỗi nghiêm trọng", string.Format("Thông tin bản đồ ID '{0}' không tìm thấy, hãy thoát game và liên hệ với hỗ trợ để được xử lý!", mapData.ID), () => {
-                    Application.Quit();
-                }, false);
+                KTDebug.LogWarning(string.Format("Gói cập nhật bản đồ {0} (ID: {1}) không có trên CDN. Bỏ qua bước tải CDN.", mapResFolderName, mapData.ID));
+                Global.Data.CurrentDownloadingMapName = "";
+                done?.Invoke();
                 yield break;
             }
 

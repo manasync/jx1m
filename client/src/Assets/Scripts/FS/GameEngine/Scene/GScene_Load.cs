@@ -263,9 +263,12 @@ namespace FS.GameEngine.Scene
             this.LoadMinimapGrowPointList(assetBundle);
             this.LoadMinimapZone(assetBundle);
             /// Giải phóng Bundle
-            assetBundle.Unload(true);
-            /// Xóa Bundle
-            GameObject.Destroy(assetBundle);
+            if (assetBundle != null)
+            {
+                assetBundle.Unload(true);
+                /// Xóa Bundle
+                GameObject.Destroy(assetBundle);
+            }
         }
 
         /// <summary>

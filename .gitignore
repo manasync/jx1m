@@ -79,6 +79,41 @@ sysinfo.txt
 **/[Aa]ssets/[Ss]treamingAssets/aa.meta
 **/[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Temporary Editor builder staging directories
+client/src/Assets/Editor/TempMap/
+client/src/Assets/Editor/TempMap.meta
+client/src/Assets/Editor/TempNPC/
+client/src/Assets/Editor/TempNPC.meta
+client/src/Assets/Editor/Temp*/
+client/src/Assets/Editor/Temp*.meta
+
+# Unpacked heavy CDN / game asset data (Maps, NPCs, Player animations, Pets, Effects, etc.)
+# Base UI and Intro videos are tracked in git; bulk runtime CDN assets are downloaded / streamed
+client/src/Assets/StreamingAssets/Data/Resources/PlayerRes/
+client/src/Assets/StreamingAssets/Data/Resources/PlayerRes.meta
+client/src/Assets/StreamingAssets/Data/Resources/NPC/
+client/src/Assets/StreamingAssets/Data/Resources/NPC.meta
+client/src/Assets/StreamingAssets/Data/Resources/Map/
+client/src/Assets/StreamingAssets/Data/Resources/Map.meta
+client/src/Assets/StreamingAssets/Data/Resources/Pet/
+client/src/Assets/StreamingAssets/Data/Resources/Pet.meta
+client/src/Assets/StreamingAssets/Data/Resources/Character/
+client/src/Assets/StreamingAssets/Data/Resources/Character.meta
+client/src/Assets/StreamingAssets/Data/Resources/Effect/
+client/src/Assets/StreamingAssets/Data/Resources/Effect.meta
+client/src/Assets/StreamingAssets/Data/Resources/SkillAnimation/
+client/src/Assets/StreamingAssets/Data/Resources/SkillAnimation.meta
+client/src/Assets/StreamingAssets/Data/Resources/Sound/
+client/src/Assets/StreamingAssets/Data/Resources/Sound.meta
+client/src/Assets/StreamingAssets/Data/Resources/Item/
+client/src/Assets/StreamingAssets/Data/Resources/Item.meta
+client/src/Assets/StreamingAssets/Data/Resources/Others/
+client/src/Assets/StreamingAssets/Data/Resources/Others.meta
+
+# Unpacked raw MapConfig XMLs (canonical source is server/bin/GameServer/Config/MapConfig)
+client/src/Assets/Config/MapConfig/
+client/src/Assets/Config/MapConfig.meta
+
 # JetBrains Rider Unity integration
 /[Aa]ssets/Plugins/Editor/JetBrains*
 
@@ -145,13 +180,22 @@ _ReSharper*/
 .history/
 
 # ------------------------------------------------------------------------------
-# 6. Builds & Binary Packages (Unity / Mobile / Desktop outputs)
+# 6. Builds & Binary Packages (Unity / Mobile / Desktop outputs & Archives)
 # ------------------------------------------------------------------------------
 *.apk
 *.aab
 *.app
 *.ipa
 *.unitypackage
+*.rar
+*.7z
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bz2
+*.xz
 crashlytics-build.properties
 .gradle/
 

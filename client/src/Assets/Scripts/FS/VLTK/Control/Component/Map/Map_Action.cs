@@ -185,10 +185,12 @@ namespace FS.VLTK.Control.Component
             {
                 /// Tên Res bản đồ cần tải
                 string mapResFolderName = Regex.Match(mapData.ImageFolder, @"Resources\/Map\/(\w+)\/Image")?.Groups[1]?.Value;
+                /// Thông tin File tải trên CDN
+                UpdateZipFile updateFile = MainGame.UpdateFiles?.ZipFiles?.Where(x => x.FileName == string.Format("Data/Resources/Map/{0}.zip", mapResFolderName)).FirstOrDefault();
                 /// Thông tin trong File chờ Update sau
-                UpdateZipFile updateLaterInfo = MainGame.ListUpdateLaterFiles.ZipFiles.Where(x => x.FileName == string.Format("Data/Resources/Map/{0}.zip", mapResFolderName)).FirstOrDefault();
-                /// Nếu bản đồ chưa tồn tại hoặc khác MD5 cần Update
-                if (updateLaterInfo != null || !KTResourceChecker.IsMapResExist(this.MapCode))
+                UpdateZipFile updateLaterInfo = MainGame.ListUpdateLaterFiles?.ZipFiles?.Where(x => x.FileName == string.Format("Data/Resources/Map/{0}.zip", mapResFolderName)).FirstOrDefault();
+                /// Nếu có file zip trên CDN và (bản đồ chưa tồn tại hoặc khác MD5 cần Update)
+                if (updateFile != null && (updateLaterInfo != null || !KTResourceChecker.IsMapResExist(this.MapCode)))
                 {
                     /// Reset tổng số lượt đã thử
                     this.totalTriedDownloadTimes = 0;
@@ -198,7 +200,7 @@ namespace FS.VLTK.Control.Component
                         this.BeginReadMapData(mapData);
                     }));
                 }
-                /// Nếu bản đồ đã tồn tại
+                /// Nếu bản đồ đã tồn tại hoặc không có gói tải CDN
                 else
                 {
                     /// Đọc dữ liệu bản đồ

@@ -457,4 +457,476 @@ public static class UIAssetBundleBuilder
 
         Directory.Delete(tempBundleOutput, true);
     }
+
+    [MenuItem("JX1M/Build Starter Character Bundles")]
+    public static void BuildStarterCharacterBundles()
+    {
+        Debug.Log("[UIAssetBundleBuilder] Starting Character Bundles build...");
+
+        string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+        string playerResDir = Path.Combine(projectRoot, "res/PlayerRes");
+        string streamingData = Path.Combine(Application.streamingAssetsPath, "Data/Resources/Character");
+        string tempCharDir = "Assets/Editor/TempCharacter";
+
+        if (!Directory.Exists(tempCharDir)) Directory.CreateDirectory(tempCharDir);
+
+        var targets = new (string sourceSubDir, string destSubDir)[]
+        {
+            ("Man/Body/body20", "Man/Body/body20"),
+            ("Woman/Body/body20", "Woman/Body/body20"),
+            ("Man/Helm/helm20", "Man/Head/helm20"),
+            ("Woman/Helm/helm20", "Woman/Head/helm20"),
+            ("Man/Weapon/weapon02", "Man/Weapon/weapon02"),
+        };
+
+        string[] actions = new[] { "FreeStand1", "FreeRun", "FreeWalk" };
+
+        List<AssetBundleBuild> allBuilds = new List<AssetBundleBuild>();
+        List<(string bundleName, string destDir)> copyMap = new List<(string, string)>();
+
+        foreach (var (sourceSubDir, destSubDir) in targets)
+        {
+            string srcPath = Path.Combine(playerResDir, sourceSubDir);
+            string dstPath = Path.Combine(streamingData, destSubDir);
+            if (!Directory.Exists(srcPath)) continue;
+            if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
+
+            string prefix = destSubDir.Replace("/", "_");
+            string charTargetDir = Path.Combine(tempCharDir, destSubDir);
+            if (!Directory.Exists(charTargetDir)) Directory.CreateDirectory(charTargetDir);
+
+            foreach (string action in actions)
+            {
+                for (int dir = 0; dir < 8; dir++)
+                {
+                    string actionName = string.Format("{0}_{1}", action, dir);
+                    string pngFile = Path.Combine(srcPath, string.Format("{0}.png", actionName));
+                    string tpsheetFile = Path.Combine(srcPath, string.Format("{0}.tpsheet", actionName));
+                    string bundleName = string.Format("{0}_{1}.unity3d", prefix, actionName);
+                    string finalBundleName = string.Format("{0}.unity3d", actionName);
+
+                    if (!File.Exists(pngFile) || !File.Exists(tpsheetFile)) continue;
+
+                    string tempPngAsset = Path.Combine(charTargetDir, string.Format("{0}.png", actionName));
+                    File.Copy(pngFile, tempPngAsset, true);
+                    AssetDatabase.ImportAsset(tempPngAsset, ImportAssetOptions.ForceUpdate);
+
+                    TextureImporter importer = AssetImporter.GetAtPath(tempPngAsset) as TextureImporter;
+                    if (importer != null)
+                    {
+                        importer.textureType = TextureImporterType.Sprite;
+                        importer.spriteImportMode = SpriteImportMode.Multiple;
+                        importer.maxTextureSize = 2048;
+                        importer.isReadable = true;
+
+                        List<SpriteMetaData> metas = new List<SpriteMetaData>();
+                        foreach (string line in File.ReadAllLines(tpsheetFile))
+                        {
+                            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith(":")) continue;
+                            string[] parts = line.Split(';');
+                            if (parts.Length < 7) continue;
+
+                            string spriteName = parts[0].Trim();
+                            float x = float.Parse(parts[1], System.Globalization.CultureInfo.InvariantCulture);
+                            float y = float.Parse(parts[2], System.Globalization.CultureInfo.InvariantCulture);
+                            float w = float.Parse(parts[3], System.Globalization.CultureInfo.InvariantCulture);
+                            float h = float.Parse(parts[4], System.Globalization.CultureInfo.InvariantCulture);
+                            float px = float.Parse(parts[5], System.Globalization.CultureInfo.InvariantCulture);
+                            float py = float.Parse(parts[6], System.Globalization.CultureInfo.InvariantCulture);
+
+                            SpriteMetaData meta = new SpriteMetaData
+                            {
+                                name = spriteName,
+                                rect = new Rect(x, y, w, h),
+                                pivot = new Vector2(px, py),
+                                alignment = (Mathf.Approximately(px, 0.5f) && Mathf.Approximately(py, 0.5f)) ? (int)SpriteAlignment.Center : (int)SpriteAlignment.Custom
+                            };
+                            metas.Add(meta);
+                        }
+
+                        importer.spritesheet = metas.ToArray();
+                        EditorUtility.SetDirty(importer);
+                        importer.SaveAndReimport();
+                    }
+
+                    allBuilds.Add(new AssetBundleBuild
+                    {
+                        assetBundleName = bundleName,
+                        assetNames = new[] { tempPngAsset },
+                        addressableNames = new[] { actionName }
+                    });
+                    copyMap.Add((bundleName, Path.Combine(dstPath, finalBundleName)));
+                }
+            }
+        }
+
+        if (allBuilds.Count > 0)
+        {
+            string tempOutput = Path.Combine(Path.GetTempPath(), "JX1M_CharBundles_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempOutput);
+
+            BuildPipeline.BuildAssetBundles(tempOutput, allBuilds.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+
+            foreach (var (bundleName, destFile) in copyMap)
+            {
+                string src = Path.Combine(tempOutput, bundleName);
+                if (File.Exists(src))
+                {
+                    if (File.Exists(destFile)) File.Delete(destFile);
+                    File.Copy(src, destFile, true);
+                }
+            }
+
+            Directory.Delete(tempOutput, true);
+            AssetDatabase.Refresh();
+            Debug.Log(string.Format("[UIAssetBundleBuilder] Built {0} Character Bundles successfully!", copyMap.Count));
+        }
+    }
+
+
+    [MenuItem("JX1M/Build Map Config Bundles")]
+    public static void BuildMapConfigBundles()
+    {
+        Debug.Log("[UIAssetBundleBuilder] Starting Map Config Bundles build...");
+        string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../../.."));
+        string serverMapConfig = Path.Combine(projectRoot, "server/bin/GameServer/Config/MapConfig");
+        string streamingMapConfig = Path.Combine(Application.streamingAssetsPath, "Data/MapConfig");
+        string tempMapDir = "Assets/Editor/TempMapConfig";
+
+        if (!Directory.Exists(serverMapConfig))
+        {
+            Debug.LogError("[UIAssetBundleBuilder] Server MapConfig directory not found: " + serverMapConfig);
+            return;
+        }
+
+        if (!Directory.Exists(streamingMapConfig)) Directory.CreateDirectory(streamingMapConfig);
+        if (!Directory.Exists(tempMapDir)) Directory.CreateDirectory(tempMapDir);
+
+        string[] starterMaps = new[] { "BaLangHuyen", "GiangTanThon", "BienKinh", "TuongDuong", "PhuongTuong", "DaiLy", "ThanhDo", "LamAn" };
+        List<AssetBundleBuild> builds = new List<AssetBundleBuild>();
+
+        foreach (string mapName in starterMaps)
+        {
+            string srcMapDir = Path.Combine(serverMapConfig, mapName);
+            if (!Directory.Exists(srcMapDir)) continue;
+
+            string tempTargetDir = Path.Combine(tempMapDir, mapName);
+            if (!Directory.Exists(tempTargetDir)) Directory.CreateDirectory(tempTargetDir);
+
+            List<string> assetPaths = new List<string>();
+            List<string> addressableNames = new List<string>();
+
+            foreach (string file in Directory.GetFiles(srcMapDir))
+            {
+                if (file.EndsWith(".meta", StringComparison.OrdinalIgnoreCase)) continue;
+                string fileName = Path.GetFileName(file);
+                string tempFile = Path.Combine(tempTargetDir, fileName);
+                File.Copy(file, tempFile, true);
+                AssetDatabase.ImportAsset(tempFile, ImportAssetOptions.ForceUpdate);
+
+                string normName = fileName;
+                if (normName.Equals("npcs.xml", StringComparison.OrdinalIgnoreCase)) normName = "NPCs.xml";
+                else if (normName.Equals("teleports.xml", StringComparison.OrdinalIgnoreCase)) normName = "Teleport.xml";
+                else if (normName.Equals("zones.xml", StringComparison.OrdinalIgnoreCase)) normName = "Zones.xml";
+
+                assetPaths.Add(tempFile);
+                addressableNames.Add(normName);
+            }
+
+            if (assetPaths.Count > 0)
+            {
+                builds.Add(new AssetBundleBuild
+                {
+                    assetBundleName = mapName + ".unity3d",
+                    assetNames = assetPaths.ToArray(),
+                    addressableNames = addressableNames.ToArray()
+                });
+            }
+        }
+
+        if (builds.Count > 0)
+        {
+            string tempOutput = Path.Combine(Path.GetTempPath(), "JX1M_MapBundles_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempOutput);
+
+            BuildPipeline.BuildAssetBundles(tempOutput, builds.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+
+            foreach (var b in builds)
+            {
+                string src = Path.Combine(tempOutput, b.assetBundleName);
+                string dst = Path.Combine(streamingMapConfig, b.assetBundleName);
+                if (File.Exists(src))
+                {
+                    if (File.Exists(dst)) File.Delete(dst);
+                    File.Copy(src, dst, true);
+                }
+            }
+
+            Directory.Delete(tempOutput, true);
+            AssetDatabase.Refresh();
+            Debug.Log(string.Format("[UIAssetBundleBuilder] Built {0} Map Config Bundles successfully!", builds.Count));
+        }
+    }
+
+    [MenuItem("JX1M/Build Starter NPC Bundles")]
+    public static void BuildStarterNPCBundles()
+    {
+        Debug.Log("[UIAssetBundleBuilder] Starting NPC Bundles build for starter map...");
+
+        string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+        string npcResDir = Path.Combine(projectRoot, "res/Npc");
+        string streamingNpcDir = Path.Combine(Application.streamingAssetsPath, "Data/Resources/NPC");
+        string tempNpcDir = "Assets/Editor/TempNPC";
+
+        if (!Directory.Exists(tempNpcDir)) Directory.CreateDirectory(tempNpcDir);
+        if (!Directory.Exists(streamingNpcDir)) Directory.CreateDirectory(streamingNpcDir);
+
+        string[] starterNpcs = new string[]
+        {
+            "passerby049", "enemy057", "enemy158", "enemy162", "enemy104", "enemy189",
+            "passerby041", "passerby007", "passerby024", "passerby177", "passerby181",
+            "enemy081", "enemy165", "enemy167", "enemy169", "teleport"
+        };
+
+        List<AssetBundleBuild> allBuilds = new List<AssetBundleBuild>();
+        List<(string bundleName, string destPath)> copyMap = new List<(string, string)>();
+
+        foreach (string npcName in starterNpcs)
+        {
+            string srcFolder = Path.Combine(npcResDir, npcName);
+            if (!Directory.Exists(srcFolder)) continue;
+
+            string dstFolder = Path.Combine(streamingNpcDir, npcName);
+            if (!Directory.Exists(dstFolder)) Directory.CreateDirectory(dstFolder);
+
+            string targetDir = Path.Combine(tempNpcDir, npcName);
+            if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+
+            string[] pngFiles = Directory.GetFiles(srcFolder, "*.png");
+            foreach (string pngPath in pngFiles)
+            {
+                string actionName = Path.GetFileNameWithoutExtension(pngPath);
+                if (!actionName.StartsWith("NormalStand") && !actionName.StartsWith("FightStand"))
+                    continue;
+
+                string tpsheetPath = Path.Combine(srcFolder, actionName + ".tpsheet");
+                string bundleName = string.Format("npc_{0}_{1}.unity3d", npcName, actionName);
+                string finalBundleName = actionName + ".unity3d";
+
+                string tempPngAsset = Path.Combine(targetDir, actionName + ".png");
+                File.Copy(pngPath, tempPngAsset, true);
+                AssetDatabase.ImportAsset(tempPngAsset, ImportAssetOptions.ForceUpdate);
+
+                TextureImporter importer = AssetImporter.GetAtPath(tempPngAsset) as TextureImporter;
+                if (importer != null)
+                {
+                    importer.textureType = TextureImporterType.Sprite;
+                    importer.spriteImportMode = SpriteImportMode.Multiple;
+                    importer.maxTextureSize = 2048;
+                    importer.isReadable = true;
+
+                    List<SpriteMetaData> metas = new List<SpriteMetaData>();
+                    if (File.Exists(tpsheetPath))
+                    {
+                        foreach (string line in File.ReadAllLines(tpsheetPath))
+                        {
+                            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith(":")) continue;
+                            string[] parts = line.Split(';');
+                            if (parts.Length < 7) continue;
+
+                            string spriteName = parts[0].Trim();
+                            float x = float.Parse(parts[1], System.Globalization.CultureInfo.InvariantCulture);
+                            float y = float.Parse(parts[2], System.Globalization.CultureInfo.InvariantCulture);
+                            float w = float.Parse(parts[3], System.Globalization.CultureInfo.InvariantCulture);
+                            float h = float.Parse(parts[4], System.Globalization.CultureInfo.InvariantCulture);
+                            float px = float.Parse(parts[5], System.Globalization.CultureInfo.InvariantCulture);
+                            float py = float.Parse(parts[6], System.Globalization.CultureInfo.InvariantCulture);
+
+                            metas.Add(new SpriteMetaData
+                            {
+                                name = spriteName,
+                                rect = new Rect(x, y, w, h),
+                                pivot = new Vector2(px, py),
+                                alignment = (Mathf.Approximately(px, 0.5f) && Mathf.Approximately(py, 0.5f)) ? (int)SpriteAlignment.Center : (int)SpriteAlignment.Custom
+                            });
+                        }
+                    }
+
+                    if (metas.Count == 0)
+                    {
+                        metas.Add(new SpriteMetaData
+                        {
+                            name = actionName,
+                            rect = new Rect(0, 0, 128, 128),
+                            pivot = new Vector2(0.5f, 0.5f),
+                            alignment = (int)SpriteAlignment.Center
+                        });
+                    }
+
+                    importer.spritesheet = metas.ToArray();
+                    EditorUtility.SetDirty(importer);
+                    importer.SaveAndReimport();
+                }
+
+                allBuilds.Add(new AssetBundleBuild
+                {
+                    assetBundleName = bundleName,
+                    assetNames = new[] { tempPngAsset },
+                    addressableNames = new[] { actionName }
+                });
+                copyMap.Add((bundleName, Path.Combine(dstFolder, finalBundleName)));
+            }
+        }
+
+        string effectResFile = Path.Combine(projectRoot, "res/UI/Icons/Item/Unknown/hoicham.png");
+        string streamingEffectDir = Path.Combine(Application.streamingAssetsPath, "Data/Resources/Effect");
+        if (!Directory.Exists(streamingEffectDir)) Directory.CreateDirectory(streamingEffectDir);
+
+        if (File.Exists(effectResFile))
+        {
+            string effectTargetDir = Path.Combine(tempNpcDir, "Effect");
+            if (!Directory.Exists(effectTargetDir)) Directory.CreateDirectory(effectTargetDir);
+            string tempEffectAsset = Path.Combine(effectTargetDir, "1012.png");
+            File.Copy(effectResFile, tempEffectAsset, true);
+            AssetDatabase.ImportAsset(tempEffectAsset, ImportAssetOptions.ForceUpdate);
+
+            TextureImporter effImp = AssetImporter.GetAtPath(tempEffectAsset) as TextureImporter;
+            if (effImp != null)
+            {
+                effImp.textureType = TextureImporterType.Sprite;
+                effImp.spriteImportMode = SpriteImportMode.Multiple;
+                effImp.isReadable = true;
+                effImp.spritesheet = new SpriteMetaData[]
+                {
+                    new SpriteMetaData
+                    {
+                        name = "1012",
+                        rect = new Rect(0, 0, 48, 48),
+                        pivot = new Vector2(0.5f, 0.5f),
+                        alignment = (int)SpriteAlignment.Center
+                    }
+                };
+                EditorUtility.SetDirty(effImp);
+                effImp.SaveAndReimport();
+            }
+
+            allBuilds.Add(new AssetBundleBuild
+            {
+                assetBundleName = "effect_1012.unity3d",
+                assetNames = new[] { tempEffectAsset },
+                addressableNames = new[] { "1012" }
+            });
+            copyMap.Add(("effect_1012.unity3d", Path.Combine(streamingEffectDir, "1012.unity3d")));
+        }
+
+        if (allBuilds.Count > 0)
+        {
+            string tempBundleOutput = Path.Combine(Path.GetTempPath(), "JX1M_NPCBundles_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempBundleOutput);
+
+            BuildPipeline.BuildAssetBundles(tempBundleOutput, allBuilds.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+
+            foreach (var (bundleName, destPath) in copyMap)
+            {
+                string srcFile = Path.Combine(tempBundleOutput, bundleName);
+                if (File.Exists(srcFile))
+                {
+                    if (File.Exists(destPath)) File.Delete(destPath);
+                    File.Copy(srcFile, destPath, true);
+                }
+            }
+
+            Directory.Delete(tempBundleOutput, true);
+            AssetDatabase.Refresh();
+            Debug.Log(string.Format("[UIAssetBundleBuilder] Successfully built {0} NPC and Effect bundles!", allBuilds.Count));
+        }
+    }
+
+    [MenuItem("JX1M/Build BaLangHuyen Map and Music")]
+    public static void BuildBaLangHuyenMapAndMusic()
+    {
+        Debug.Log("[UIAssetBundleBuilder] Building BaLangHuyen Map Tiles and Music...");
+
+        string tempMapDir = "Assets/Editor/TempMap";
+        string streamingMapDir = Path.Combine(Application.streamingAssetsPath, "Data/Resources/Map/BaLangHuyen");
+        string streamingImageDir = Path.Combine(streamingMapDir, "Image");
+
+        if (!Directory.Exists(streamingImageDir)) Directory.CreateDirectory(streamingImageDir);
+
+        List<AssetBundleBuild> allBuilds = new List<AssetBundleBuild>();
+        List<(string bundleName, string destPath)> copyMap = new List<(string, string)>();
+
+        for (int layerID = 1; layerID <= 15; layerID++)
+        {
+            string pngAsset = Path.Combine(tempMapDir, string.Format("Image/{0}.png", layerID));
+            if (!File.Exists(pngAsset)) continue;
+
+            AssetDatabase.ImportAsset(pngAsset, ImportAssetOptions.ForceUpdate);
+            TextureImporter importer = AssetImporter.GetAtPath(pngAsset) as TextureImporter;
+            if (importer != null)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Multiple;
+                importer.maxTextureSize = 2048;
+                importer.isReadable = true;
+                importer.spritesheet = new SpriteMetaData[]
+                {
+                    new SpriteMetaData
+                    {
+                        name = layerID.ToString(),
+                        rect = new Rect(0, 0, 512, 512),
+                        pivot = new Vector2(0.5f, 0.5f),
+                        alignment = (int)SpriteAlignment.Center
+                    }
+                };
+                EditorUtility.SetDirty(importer);
+                importer.SaveAndReimport();
+            }
+
+            string bundleName = string.Format("map_blh_{0}.unity3d", layerID);
+            allBuilds.Add(new AssetBundleBuild
+            {
+                assetBundleName = bundleName,
+                assetNames = new[] { pngAsset },
+                addressableNames = new[] { layerID.ToString() }
+            });
+            copyMap.Add((bundleName, Path.Combine(streamingImageDir, string.Format("{0}.unity3d", layerID))));
+        }
+
+        string wavAsset = Path.Combine(tempMapDir, "Music.wav");
+        if (File.Exists(wavAsset))
+        {
+            AssetDatabase.ImportAsset(wavAsset, ImportAssetOptions.ForceUpdate);
+            allBuilds.Add(new AssetBundleBuild
+            {
+                assetBundleName = "map_blh_music.unity3d",
+                assetNames = new[] { wavAsset },
+                addressableNames = new[] { "Music" }
+            });
+            copyMap.Add(("map_blh_music.unity3d", Path.Combine(streamingMapDir, "Music.unity3d")));
+        }
+
+        if (allBuilds.Count > 0)
+        {
+            string tempBundleOutput = Path.Combine(Path.GetTempPath(), "JX1M_MapTiles_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempBundleOutput);
+
+            BuildPipeline.BuildAssetBundles(tempBundleOutput, allBuilds.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+
+            foreach (var (bundleName, destPath) in copyMap)
+            {
+                string srcFile = Path.Combine(tempBundleOutput, bundleName);
+                if (File.Exists(srcFile))
+                {
+                    if (File.Exists(destPath)) File.Delete(destPath);
+                    File.Copy(srcFile, destPath, true);
+                }
+            }
+
+            Directory.Delete(tempBundleOutput, true);
+            AssetDatabase.Refresh();
+            Debug.Log(string.Format("[UIAssetBundleBuilder] Successfully built {0} BaLangHuyen map tiles and music bundles!", allBuilds.Count));
+        }
+    }
+
 }

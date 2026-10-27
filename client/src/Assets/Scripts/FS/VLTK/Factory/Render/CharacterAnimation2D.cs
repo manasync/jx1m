@@ -484,6 +484,16 @@ namespace FS.VLTK.Utilities.UnityComponent
         /// Thực hiện động tác
         /// </summary>
         /// <returns></returns>
+        private int SafeGetLayer(int sex, int frameID, int dir, string actionName, byte defaultLayer)
+        {
+            if (Loader.Loader.CharacterActionSetLayerSort != null)
+            {
+                int layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(sex, frameID, dir, actionName, defaultLayer);
+                if (layer >= 0) return layer;
+            }
+            return defaultLayer;
+        }
+
         private IEnumerator DoPlay(PlayerActionType actionType, bool isRiding, float duration, int repeatCount, float repeatAfter, bool isContinueFromCurrentFrame, Direction dir, Action Callback)
         {
             #region Prepare
@@ -532,7 +542,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         armorActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 5),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 5),
                         });
                     }
                     /// Nếu là tay trái
@@ -542,7 +552,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         leftHandActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 6),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 6),
                         });
                     }
                     /// Nếu là tay phải
@@ -552,7 +562,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         rightHandActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 7),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 7),
                         });
                     }
                 }
@@ -577,7 +587,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         headActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 0),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 0),
                         });
                     }
                     /// Nếu là tóc
@@ -587,7 +597,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         hairActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 1),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 1),
                         });
                     }
                 }
@@ -612,7 +622,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         leftWeaponActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 8),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 8),
                         });
                     }
                     /// Nếu là tóc
@@ -622,7 +632,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         rightWeaponActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 9),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 9),
                         });
                     }
                 }
@@ -643,7 +653,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                     mantleActionSet.Add(new ActionSetFrameInfo()
                     {
                         Sprite = pair.Value as Sprite,
-                        Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 16),
+                        Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 16),
                     });
                 }
 
@@ -668,7 +678,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         horseHeadActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 12),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 12),
                         });
                     }
                     /// Nếu là tóc
@@ -678,7 +688,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         horseBodyActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 13),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 13),
                         });
                     }
                     /// Nếu là tóc
@@ -688,7 +698,7 @@ namespace FS.VLTK.Utilities.UnityComponent
                         horseTailActionSet.Add(new ActionSetFrameInfo()
                         {
                             Sprite = pair.Value as Sprite,
-                            Layer = Loader.Loader.CharacterActionSetLayerSort.GetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, 14),
+                            Layer = this.SafeGetLayer(this._Data.RoleSex, frameID, (int) dir, actionName, (byte) 14),
                         });
                     }
                 }
@@ -712,6 +722,13 @@ namespace FS.VLTK.Utilities.UnityComponent
             if (!isContinueFromCurrentFrame)
             {
                 this.CurrentFrameID = -1;
+            }
+
+            if (armorActionSet == null || armorActionSet.Count == 0)
+            {
+                this.IsPlaying = false;
+                Callback?.Invoke();
+                yield break;
             }
 
             this.IsPlaying = true;
